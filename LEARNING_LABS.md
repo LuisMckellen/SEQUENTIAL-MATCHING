@@ -1,0 +1,137 @@
+# Learning Labs (v2) — rebuild the proposal yourself
+
+Goal: by Lab 10 you can explain every part of the v11 proposal from things you ran.
+**Predict first, then run, then compare.** Write the prediction and what each outcome would mean.
+Run from the repo root: `PYTHONHASHSEED=0 PYTHONPATH=. python3 <script> ...`
+Follow METHOD.md on every run: paired seeds, intervals, W/T/L, funnel check, seed count.
+
+Labs 0, 1, 2, 4, 5 and 8 start with:
+```python
+from kit import generate, Simulator, eligibility, baseline_asks, baseline_match, HARD, SOFT
+```
+
+---
+
+## Day 1 (7 Oct): what the world looks like
+
+### Lab 0 — Look at one person (15 min) → "observable state"
+```python
+sim = Simulator(generate(1101, 200, 'evaluation', 'development'))
+s = sim.observe()
+m = s['members'][0]
+for k in HARD: print(k, m['fields'][k], m['field_status'][k])
+```
+- Predict: how many hard fields will be known?
+- Notice: `None` + `not_asked` (askable) vs `None` + `declined` (never available).
+- Check: why must the policy never treat `None` as "no"?
+
+### Lab 1 — Can these two meet? (15 min) → Phase 1 feasibility
+```python
+a, b = s['members'][0], s['members'][1]
+print(eligibility(a, b))
+```
+- Try 10 pairs; count `infeasible` / `needs_clarification` / `feasible`.
+- Look at `who_to_meet` for both people: any gender can meet any gender if both accept.
+- Check: why is a known failure stronger than missing data?
+
+### Lab 2 — Ask a question (15 min) → clarification budget
+```python
+t = next(x for x in s['members'] if x['available'] and any(x['fields'][k] is None for k in HARD))
+print(s['ask_budget_remaining'], [k for k in HARD if t['fields'][k] is None])
+sim.resolve_asks([{'member_id': t['member_id'], 'field': 'constraints'}])
+s = sim.observe(); t = next(x for x in s['members'] if x['member_id'] == t['member_id'])
+print(s['ask_budget_remaining'], [k for k in HARD if t['fields'][k] is None])
+```
+- Check: with 12 units/day, how many people can you fully clarify per day?
+
+### Lab 3 — How many choices exist? → the scarcity claim (the reviewers' top request)
+**3a (explore, 2 min):** `python3 diagnose_graph.py development 1001-1002`
+- Predict first: feasible pairs per day among ~150 available people? Share of days with none?
+
+**3b (confirm, ~6 min):** 20 seeds each of development, sparse, cold_start:
+```
+python3 diagnose_graph.py development 1101-1120
+python3 diagnose_graph.py sparse 1101-1120
+python3 diagnose_graph.py cold_start 1101-1120
+```
+- Record the SUMMARY lines (mean and range across seeds) for the note.
+- Check: does scarcity hold in all three families, or only in some?
+
+### Lab 4 — The funnel (20 min) → Phase 2 funnel scorer
+```python
+sim = Simulator(generate(1101, 200, 'evaluation', 'development'))
+for d in range(60):
+    sim.resolve_asks(baseline_asks(sim.observe()))
+    sim.advance(baseline_match(sim.observe()))
+for d in range(40): sim.advance([])
+print(sim.metrics())
+```
+- Expect roughly ~90 introductions → ~15 mutual Yes → ~11 dates → ~1 success.
+- Funnel check (METHOD 15): assignments ≥ mutual ≥ dates ≥ MSMI. Must hold.
+
+---
+
+## Day 2 (7–8 Oct): luck, fairness, learning
+
+### Lab 5 — Seeds and luck (20 min) → "20+ seeds"
+Run Lab 4 for seeds 1101–1105, then seed 1101 twice.
+- Same seed = identical result; different seeds = very different MSMI.
+
+### Lab 6 — Reproduce the "tie" (~10 min compute) → paired comparisons
+```
+python3 h1.py                                   # run twice; outputs must match
+python3 h1eval.py development 1001-1015
+python3 h4.py development 1001-1015
+python3 summ.py h1_learned greedy 1001-1015
+python3 summ.py h4_resp_prior4 greedy 1001-1015
+```
+- Your numbers must match the research note exactly (same seeds, deterministic).
+- Read the **decision diff** line: what share of introductions actually changed?
+  Few changes = the new score barely reached a decision (METHOD 7).
+- Check the record count, n_seeds = 15, and funnel violations = 0 before reading anything else.
+- Optional (rule 20): `python3 h4.py development 1001-1015 2` and `... 8`. Does the conclusion change?
+
+### Lab 7 — What did the model learn? (30 min) → learned weights
+Open `h1.py`: features (`feats`), saved on the assignment day (`snap[...]`), labels from revealed responses.
+- Which soft field matters most? Why save features on the assignment day? (leakage)
+
+### Lab 8 — Greedy vs whole-pool matching (15 min) → blossom
+```python
+import networkx as nx
+G = nx.Graph()
+G.add_weighted_edges_from([('A','D',.90),('B','C',.05),('A','C',.65),('B','D',.65)])
+print(nx.max_weight_matching(G))
+```
+- Greedy total by hand vs blossom total. Then: why might it barely help here? (Lab 3, Lab 6 decision diff)
+
+---
+
+## Day 3 (8 Oct): your own experiments
+
+### Lab 9 — Does question order matter? (~15 min compute) → H3, the primary hypothesis
+```
+python3 exp.py development 1101-1120
+python3 exp.py cold_start 1101-1120
+python3 summ.py lab9_asking greedy 1101-1120
+```
+Policies: `greedy` (list-order asks), `voi_greedy` (value-based asks), `voi_mwm` (+ blossom),
+`voi_maxcard` (+ max-cardinality matching).
+- Primary metric: `feasible_per_day_d0_20` (pairs unlocked in the first 21 days), then mutual acceptances, coverage.
+- Write your prediction and what would prove you wrong before running.
+
+### Lab 10 — Thompson sampling on reply rates (if time; already in Lab 6 output)
+`resp_thompson` in `h4.py` draws each person's reply rate once per day instead of using the average.
+- For a fresh test: `python3 h4.py development 1101-1120`, then
+  `python3 summ.py h4_resp_prior4 greedy 1101-1120` (the seed filter keeps fresh seeds apart from Lab 6's).
+- Check: does it spread introductions more evenly, or change nothing (Lab 3 again)?
+
+---
+
+## After the labs you should be able to explain
+1. Why hard constraints are checked, never scored (Labs 0–1)
+2. Why asking is a decision with a cost (Lab 2)
+3. Whether scarcity is real and where (Lab 3b) and whether changes reach decisions (Lab 6)
+4. Why the score is a funnel and is rare (Lab 4)
+5. Why we need seeds, pairs and intervals (Labs 5–6)
+6. What learning weights does, and its limits (Lab 7)
+7. Whether question order helps — your own finding (Lab 9)
