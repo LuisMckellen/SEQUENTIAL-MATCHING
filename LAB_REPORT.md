@@ -29,6 +29,15 @@ Seen seeds (reproduce only): 1001–1015, plus training seeds 2001–2008. Fresh
 - **Reproducibility hygiene:** set `PYTHONHASHSEED`/`PYTHONPATH` in every new terminal; run each command once; dedupe by key; add files to git by name.
 - **Pickle safety:** a `.pkl` can run code when loaded. Load only your own files.
 - **Label every claim (rule 22):** separate what I measured, what someone else claimed, and what is only a plan.
+- **Ceiling and headroom:** headroom = ceiling (greedy with free, perfect clarification) − greedy. It is the most any asking strategy could add.
+- **Gap closed:** (policy − greedy) ÷ headroom. Only meaningful when the headroom interval excludes 0; dividing by ~0 is noise.
+- **Precise vs imprecise null:** coverage headroom +0.001 [−0.001, +0.003] is a confident zero. Lab 6's MSMI tie (±0.17) was just an underpowered test.
+- **Proxy vs outcome:** feasible pairs per day (a proxy) rose 47%, while coverage, mutual and MSMI (the outcomes) didn't move.
+- **Failure analysis by category:** split the losses into funnel stages and ask which stages a policy can influence.
+- **Controllable vs fixed stages:** reply and yes depend on per-person traits (learnable from feedback). Date (78%) and on-time second answers (3 in 5 each) are fixed chance.
+- **Weights need intervals:** a single logistic fit on 1,049 labels put its largest weight on a field with no real effect, so learned weights aren't findings until bootstrapped.
+- **Don't hardcode simulator constants:** read the public source to understand it, but the policy must learn from feedback (the private worlds differ).
+- **Provenance by commit:** commit before changing code, so every record's `git_sha` identifies the code that made it.
 
 ---
 
@@ -110,9 +119,9 @@ Seen seeds (reproduce only): 1001–1015, plus training seeds 2001–2008. Fresh
 - **RESULTS:** 1,049 labels, base rate 0.461, 14 features. Relationship goal +0.53/−0.51. **Largest weight: emotional_availability_agree −0.58.**
 - **FUNNEL CHECK:** n/a.
 - **VERDICT:** counts and the relationship-goal weights are supported. "Largest weight" is not supported.
-- **WHY:** a single logistic fit; the note ranked the weights by "stability", which wasn't measured.
-- **CONCERNS:** no uncertainty on the weights (one fit, no bootstrap). A negative weight for agreement on emotional availability is unexplained.
-- **NEXT STEP:** fix the note's wording. Bootstrap the weights in Round 2.
+- **WHY:** the public simulator's acceptance rule (`kit.py` `_prob`) uses only relationship_goal (0.7), relationship_pace (0.4), lifestyle (0.25) and conversations (0.2). Emotional availability, space for relationship and relocate have **no effect**, yet two of them got the largest learned weights (−0.58 and +0.44). This is estimation noise: each yes also depends on a large hidden per-person tendency (spread 0.7) and on random pair chemistry (spread 0.45), and 1,049 labels can't pin down 14 weights against that.
+- **CONCERNS:** no uncertainty on the weights (one fit, no bootstrap). The scorer's ranking is partly built on noise, which helps explain the Lab 6 tie. The simulator's constants are read for understanding only and must never be hardcoded into the policy.
+- **NEXT STEP:** fix the note's wording. Bootstrap the weights in Round 2 and report only weights whose interval excludes 0.
 
 ### Analysis-only ceiling (`world_ceiling_ANALYSIS_ONLY.py`)
 - **HYPOTHESIS:** 100–162 / 80–114 / 14–22 feasible pairs per world if all non-declined answers were known.
