@@ -17,5 +17,3 @@ h1c_*.pkl
 results_with_dup*.jsonl
 h1_model_run*.pkl
 
-# Local clean-up folder
-_to_delete/
