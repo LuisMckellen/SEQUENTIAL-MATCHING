@@ -11,7 +11,7 @@ def boot(d, n=4000):
 
 if __name__ == '__main__':
     exp_name = sys.argv[1]; base = sys.argv[2] if len(sys.argv) > 2 else 'greedy'
-    rows = [json.loads(l) for l in open('results.jsonl')]
+    rows = [json.loads(l) for l in open('lab_results/results.jsonl')]
     rows = [r for r in rows if r['experiment'] == exp_name]          # rule 25: filter, never assume
     if len(sys.argv) > 3:                                             # keep seen and fresh seeds apart
         keep = set(parse_seeds(sys.argv[3])); rows = [r for r in rows if r['seed'] in keep]

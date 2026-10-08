@@ -20,7 +20,7 @@ Why these levels: most pairs have few known soft fields, so V sits at the model'
 only pairs with known disagreements fall below it. tau0 = 0.10 targets those; 0.12 also holds back the
 default pairs between previously introduced people early in the episode (real waiting).
 
-Usage (repo root, PYTHONHASHSEED=0, PYTHONPATH=.; needs h1c_groups_3001_3130.pkl from Lab 7c):
+Usage (repo root, PYTHONHASHSEED=0, PYTHONPATH=.; needs lab_results/cache/h1c_groups_3001_3130.pkl from Lab 7c):
   Step 1, fresh seeds 1121-1140, all five policies (~10 min per family):
     python hackathon_files\\lab12_waiting.py development 1121-1140
     python hackathon_files\\lab12_waiting.py cold_start 1121-1140
@@ -42,7 +42,7 @@ from kit import baseline_asks, baseline_match
 from runner import feasible_edges, run_episode, write, parse_seeds
 from h1 import feats
 
-CACHE = 'h1c_groups_3001_3130.pkl'
+CACHE = 'lab_results/cache/h1c_groups_3001_3130.pkl'
 _MODEL = None
 
 
@@ -96,5 +96,5 @@ if __name__ == '__main__':
     for seed in seeds:
         for name in names:
             match = POLICIES[name]
-            write('results.jsonl', 'lab12_waiting', name, run_episode(baseline_asks, match, seed, family))
+            write('lab_results/results.jsonl', 'lab12_waiting', name, run_episode(baseline_asks, match, seed, family))
         print('done seed', seed, flush=True)

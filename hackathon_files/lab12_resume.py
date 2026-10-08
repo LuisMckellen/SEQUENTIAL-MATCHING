@@ -15,7 +15,7 @@ PLAN = ([(f, s, p) for f in ('development', 'cold_start') for s in range(1121, 1
 if __name__ == '__main__':
     budget = float(sys.argv[1]) if len(sys.argv) > 1 else 150
     done = set()
-    for l in open('results.jsonl', encoding='utf-8'):
+    for l in open('lab_results/results.jsonl', encoding='utf-8'):
         if l.strip():
             r = json.loads(l.lstrip('﻿'))
             if r['experiment'] == 'lab12_waiting':
@@ -25,5 +25,5 @@ if __name__ == '__main__':
     for f, s, p in todo:
         if time.time() - t0 > budget:
             break
-        write('results.jsonl', 'lab12_waiting', p, run_episode(baseline_asks, POLICIES[p], s, f)); n += 1
+        write('lab_results/results.jsonl', 'lab12_waiting', p, run_episode(baseline_asks, POLICIES[p], s, f)); n += 1
     print(f'ran {n}; remaining {len(todo) - n} of {len(PLAN)}')

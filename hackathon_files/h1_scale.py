@@ -16,7 +16,7 @@ halves agree in sign. The script never reads hidden simulator data.
 Usage (from the repo root, PYTHONHASHSEED=0, PYTHONPATH=.):
   python hackathon_files\\h1_scale.py 3001-3130            (collect + analyse, ~5-10 min)
   python hackathon_files\\h1_scale.py 3001-3130 200        (n_boot, default 200)
-Labels are cached in h1c_groups_<first>_<last>.pkl, so re-running the analysis is fast.
+Labels are cached in lab_results/cache/h1c_groups_<first>_<last>.pkl, so re-running the analysis is fast.
 Seeds 3001-3130 are a new block: never used for any other experiment.
 """
 import sys, os, random, pickle, time
@@ -74,7 +74,7 @@ def show(r):
 if __name__ == '__main__':
     seeds = parse_seeds(sys.argv[1]) if len(sys.argv) > 1 else list(range(3001, 3131))
     B = int(sys.argv[2]) if len(sys.argv) > 2 else 200
-    cache = f'h1c_groups_{seeds[0]}_{seeds[-1]}.pkl'
+    cache = f'lab_results/cache/h1c_groups_{seeds[0]}_{seeds[-1]}.pkl'
     if os.path.exists(cache):
         groups = pickle.load(open(cache, 'rb'))
         print(f'loaded {cache}')

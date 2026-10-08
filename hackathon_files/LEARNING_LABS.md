@@ -1,5 +1,8 @@
 # Learning Labs (v2) — rebuild the proposal yourself
 
+> **Layout (9 Oct):** outputs now live in `lab_results/` (see `lab_results/README.md`). Scripts already read and write there; save new text summaries with `Out-File` into `lab_results\summaries\`.
+
+
 Goal: by Lab 10 you can explain every part of the v11 proposal from things you ran.
 **Predict first, then run, then compare.** Write the prediction and what each outcome would mean.
 Run from the repo root: `PYTHONHASHSEED=0 PYTHONPATH=. python3 <script> ...`

@@ -59,4 +59,4 @@ if __name__ == '__main__':
     print(len(y), 'labels, base rate %.3f' % y.mean())
     for n, c in sorted(zip(names, m.coef_[0]), key=lambda t: -abs(t[1])):
         print('%-32s %+.2f' % (n, c))
-    pickle.dump(m, open('h1_model.pkl', 'wb'))
+    pickle.dump(m, open('lab_results/models/h1_model.pkl', 'wb'))

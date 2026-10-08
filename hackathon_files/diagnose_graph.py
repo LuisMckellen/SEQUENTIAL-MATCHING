@@ -32,7 +32,7 @@ if __name__ == '__main__':
     for seed in seeds:
         days = diagnose(seed, family)
         rec = {'experiment': 'graph_diag', 'family': family, 'seed': seed, 'days': days, 'env': env_meta()}
-        with open('graph.jsonl', 'a') as f:
+        with open('lab_results/graph.jsonl', 'a') as f:
             f.write(json.dumps(rec) + '\n')
         fp = [d['feasible_pairs'] for d in days]
         mo = [d['mean_options'] for d in days if d['matchable']]

@@ -1,6 +1,6 @@
 # Experiment scripts (v2)
 
-Put every file in the repo root next to `kit.py`. Install: `pip install networkx numpy scikit-learn`.
+Scripts live in `hackathon_files/` and run from the repo root (next to `kit.py`). All outputs go to `lab_results/` (see `lab_results/README.md`): episode records in `lab_results/results.jsonl`, graph records in `lab_results/graph.jsonl`, models in `lab_results/models/`, label caches in `lab_results/cache/`; save new text summaries in `lab_results/summaries/`. Install: `pip install networkx numpy scikit-learn`.
 Always run as `PYTHONHASHSEED=0 PYTHONPATH=. python <script> ...`. Seeds accept `1101-1120` or `1101,1105`.
 
 | Script | Lab | What it does | Writes |

@@ -27,7 +27,7 @@ for fam in ['development', 'cold_start', 'sparse']:
     print('    %-12s %s' % (fam, rng(shares)))
 
 # C2: supplied greedy on development 1001-1015, from results.jsonl (experiment h1_learned)
-rows = [json.loads(l) for l in open('results.jsonl', encoding='utf-8')]
+rows = [json.loads(l) for l in open('lab_results/results.jsonl', encoding='utf-8')]
 g = [r for r in rows if r['experiment'] == 'h1_learned' and r['policy'] == 'greedy'
      and r['family'] == 'development' and 1001 <= r['seed'] <= 1015]
 print('\nC2  supplied greedy, development 1001-1015, n=%d' % len(g))
@@ -38,7 +38,7 @@ print('    mutual/MSMI event ratio | note: about 15x      | %.1fx (%.2f vs %.2f 
 print('    MSMI events/episode    | note: about one      | %.2f' % st.mean(r['msmi'] for r in g))
 
 # C3: graph diagnostic, development 1101-1120, from graph.jsonl
-gr = [r for r in (json.loads(l) for l in open('graph.jsonl', encoding='utf-8')) if r['family'] == 'development']
+gr = [r for r in (json.loads(l) for l in open('lab_results/graph.jsonl', encoding='utf-8')) if r['family'] == 'development']
 days = [d for r in gr for d in r['days']]
 print('\nC3  graph, development 1101-1120, n_seeds=%d, %d seed-days' % (len(gr), len(days)))
 av = sorted(d['available'] for d in days); hk = [d['hard_known'] for d in days]

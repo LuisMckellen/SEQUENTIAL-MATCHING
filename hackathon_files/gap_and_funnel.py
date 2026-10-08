@@ -8,7 +8,7 @@ import sys, json, random, statistics as st
 from runner import parse_seeds, STAGES
 
 family, seeds = sys.argv[1], set(parse_seeds(sys.argv[2]))
-rows = [json.loads(l) for l in open('results.jsonl')]
+rows = [json.loads(l) for l in open('lab_results/results.jsonl')]
 rows = [r for r in rows if r['family'] == family and r['seed'] in seeds and
         r['experiment'] in ('lab9_asking', 'ceiling_perfect_asks')]
 by = {}

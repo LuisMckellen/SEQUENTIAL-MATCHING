@@ -1,10 +1,21 @@
+# Python and environments
 __pycache__/
 *.pyc
 .venv/
-results/
+
+# Secrets: never commit
 .env
 .env.*
 
+# Kit evaluator output folder (ignored by the kit's default)
+results/
+
+# Lab artefacts that are regenerable or superseded
+lab_results/cache/
+lab_results/archive/
+h1c_*.pkl
 results_with_dup*.jsonl
 h1_model_run*.pkl
-h1c_*.pkl
+
+# Local clean-up folder
+_to_delete/

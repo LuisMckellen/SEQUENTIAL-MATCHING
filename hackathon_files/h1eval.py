@@ -12,7 +12,7 @@ _MODEL = None
 def model():
     global _MODEL
     if _MODEL is None:
-        _MODEL = pickle.load(open('h1_model.pkl', 'rb'))
+        _MODEL = pickle.load(open('lab_results/models/h1_model.pkl', 'rb'))
     return _MODEL
 
 
@@ -50,5 +50,5 @@ if __name__ == '__main__':
     family, seeds = sys.argv[1], parse_seeds(sys.argv[2])
     for seed in seeds:
         for name, match in POLICIES.items():
-            write('results.jsonl', 'h1_learned', name, run_episode(baseline_asks, match, seed, family))
+            write('lab_results/results.jsonl', 'h1_learned', name, run_episode(baseline_asks, match, seed, family))
         print('done seed', seed, flush=True)

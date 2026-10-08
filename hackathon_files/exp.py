@@ -51,5 +51,5 @@ if __name__ == '__main__':
     for seed in seeds:
         for name in names:
             ask, match = POLICIES[name]
-            write('results.jsonl', 'lab9_asking', name, run_episode(ask, match, seed, family))
+            write('lab_results/results.jsonl', 'lab9_asking', name, run_episode(ask, match, seed, family))
         print('done seed', seed, flush=True)

@@ -25,5 +25,5 @@ if __name__ == '__main__':
     family, seeds = sys.argv[1], parse_seeds(sys.argv[2])
     for seed in seeds:
         rec = run_episode(lambda s: [], baseline_match, seed, family, pre_day=reveal_all)
-        write('results.jsonl', 'ceiling_perfect_asks', 'perfect_asks_greedy', rec)
+        write('lab_results/results.jsonl', 'ceiling_perfect_asks', 'perfect_asks_greedy', rec)
         print('done seed', seed, flush=True)

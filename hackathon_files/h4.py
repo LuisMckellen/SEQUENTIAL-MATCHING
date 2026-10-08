@@ -80,5 +80,5 @@ if __name__ == '__main__':
     exp_name = 'h4_resp_prior%g' % PRIOR
     for seed in seeds:
         for name, match in POLICIES.items():
-            write('results.jsonl', exp_name, name, run_episode(baseline_asks, match, seed, family))
+            write('lab_results/results.jsonl', exp_name, name, run_episode(baseline_asks, match, seed, family))
         print('done seed', seed, flush=True)

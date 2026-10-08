@@ -6,7 +6,7 @@ import sys, json, collections, statistics as st
 from runner import parse_seeds
 exp, pol, fam, seeds = sys.argv[1], sys.argv[2], sys.argv[3], set(parse_seeds(sys.argv[4]))
 recs = {}
-for l in open('results.jsonl'):
+for l in open('lab_results/results.jsonl'):
     r = json.loads(l)
     if r['experiment'] == exp and r['policy'] == pol and r['family'] == fam and r['seed'] in seeds:
         recs[r['seed']] = r                      # last record per seed (duplicates are identical)

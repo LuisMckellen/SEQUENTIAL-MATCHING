@@ -41,8 +41,8 @@ if __name__ == '__main__':
     test = parse_seeds(sys.argv[2]) if len(sys.argv) > 2 else list(range(3131, 3151))
     family = sys.argv[3] if len(sys.argv) > 3 else 'development'
     assert not set(train) & set(test), 'held-out seeds overlap training seeds'
-    tr = pickle.load(open(f'h1c_groups_{train[0]}_{train[-1]}.pkl', 'rb'))
-    cache = f'h1c_groups_{test[0]}_{test[-1]}' + ('' if family == 'development' else '_' + family) + '.pkl'
+    tr = pickle.load(open(f'lab_results/cache/h1c_groups_{train[0]}_{train[-1]}.pkl', 'rb'))
+    cache = f'lab_results/cache/h1c_groups_{test[0]}_{test[-1]}' + ('' if family == 'development' else '_' + family) + '.pkl'
     if os.path.exists(cache):
         te = pickle.load(open(cache, 'rb'))
     else:
