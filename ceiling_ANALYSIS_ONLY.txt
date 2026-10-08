@@ -1,0 +1,3 @@
+﻿development (servable members, feasible pairs): [(141, 162), (128, 100), (127, 114)]
+sparse (servable members, feasible pairs): [(134, 22), (122, 21), (143, 14)]
+cold_start (servable members, feasible pairs): [(111, 114), (123, 89), (106, 80)]

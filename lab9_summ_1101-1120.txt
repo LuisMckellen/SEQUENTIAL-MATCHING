@@ -1,0 +1,53 @@
+﻿experiment lab9_asking | records 160 | funnel violations 0
+
+== family cold_start
+ voi_greedy vs greedy: n_seeds = 20
+   mutual_per_100           mean 5.300 vs 5.800 | diff -0.500 [-1.175, +0.175] | W/T/L 5/5/10
+   msmi_per_100             mean 0.325 vs 0.400 | diff -0.075 [-0.250, +0.125] | W/T/L 4/9/7
+   coverage                 mean 0.314 vs 0.312 | diff +0.002 [-0.000, +0.005] | W/T/L 8/8/4
+   feasible_per_day_d0_20   mean 3.748 vs 3.255 | diff +0.493 [+0.310, +0.676] | W/T/L 17/2/1
+   unserved                 mean 137.150 vs 137.550 | diff -0.400 [-0.950, +0.050] | W/T/L 4/8/8
+   missing_feedback         mean 39.950 vs 39.200 | diff +0.750 [-1.900, +3.450] | W/T/L 9/2/9
+   decision diff: 11% of introductions differ from greedy (range 0-18%)
+ voi_maxcard vs greedy: n_seeds = 20
+   mutual_per_100           mean 5.450 vs 5.800 | diff -0.350 [-1.025, +0.350] | W/T/L 6/2/12
+   msmi_per_100             mean 0.375 vs 0.400 | diff -0.025 [-0.250, +0.200] | W/T/L 4/11/5
+   coverage                 mean 0.314 vs 0.312 | diff +0.002 [-0.001, +0.005] | W/T/L 7/10/3
+   feasible_per_day_d0_20   mean 3.595 vs 3.255 | diff +0.340 [+0.207, +0.476] | W/T/L 15/2/3
+   unserved                 mean 137.200 vs 137.550 | diff -0.350 [-0.900, +0.200] | W/T/L 3/10/7
+   missing_feedback         mean 39.800 vs 39.200 | diff +0.600 [-2.000, +3.150] | W/T/L 11/0/9
+   decision diff: 12% of introductions differ from greedy (range 3-19%)
+ voi_mwm vs greedy: n_seeds = 20
+   mutual_per_100           mean 5.525 vs 5.800 | diff -0.275 [-0.900, +0.400] | W/T/L 7/2/11
+   msmi_per_100             mean 0.375 vs 0.400 | diff -0.025 [-0.250, +0.200] | W/T/L 4/11/5
+   coverage                 mean 0.313 vs 0.312 | diff +0.001 [-0.002, +0.004] | W/T/L 6/10/4
+   feasible_per_day_d0_20   mean 3.602 vs 3.255 | diff +0.348 [+0.219, +0.481] | W/T/L 16/2/2
+   unserved                 mean 137.400 vs 137.550 | diff -0.150 [-0.700, +0.450] | W/T/L 4/10/6
+   missing_feedback         mean 40.150 vs 39.200 | diff +0.950 [-2.050, +3.900] | W/T/L 13/0/7
+   decision diff: 12% of introductions differ from greedy (range 3-19%)
+
+== family development
+ voi_greedy vs greedy: n_seeds = 20
+   mutual_per_100           mean 7.375 vs 6.900 | diff +0.475 [-0.225, +1.200] | W/T/L 12/0/8
+   msmi_per_100             mean 0.575 vs 0.700 | diff -0.125 [-0.325, +0.075] | W/T/L 4/9/7
+   coverage                 mean 0.384 vs 0.383 | diff +0.001 [-0.001, +0.003] | W/T/L 6/8/6
+   feasible_per_day_d0_20   mean 5.183 vs 4.736 | diff +0.448 [+0.298, +0.598] | W/T/L 19/0/1
+   unserved                 mean 123.200 vs 123.350 | diff -0.150 [-0.650, +0.300] | W/T/L 6/8/6
+   missing_feedback         mean 46.000 vs 46.150 | diff -0.150 [-3.450, +3.250] | W/T/L 8/1/11
+   decision diff: 7% of introductions differ from greedy (range 0-16%)
+ voi_maxcard vs greedy: n_seeds = 20
+   mutual_per_100           mean 7.050 vs 6.900 | diff +0.150 [-0.450, +0.750] | W/T/L 10/2/8
+   msmi_per_100             mean 0.575 vs 0.700 | diff -0.125 [-0.375, +0.100] | W/T/L 5/9/6
+   coverage                 mean 0.385 vs 0.383 | diff +0.002 [-0.001, +0.005] | W/T/L 6/9/5
+   feasible_per_day_d0_20   mean 4.990 vs 4.736 | diff +0.255 [-0.012, +0.488] | W/T/L 15/0/5
+   unserved                 mean 123.050 vs 123.350 | diff -0.300 [-0.900, +0.250] | W/T/L 5/9/6
+   missing_feedback         mean 48.200 vs 46.150 | diff +2.050 [-2.450, +6.050] | W/T/L 14/1/5
+   decision diff: 12% of introductions differ from greedy (range 4-20%)
+ voi_mwm vs greedy: n_seeds = 20
+   mutual_per_100           mean 7.325 vs 6.900 | diff +0.425 [-0.350, +1.250] | W/T/L 10/2/8
+   msmi_per_100             mean 0.600 vs 0.700 | diff -0.100 [-0.350, +0.125] | W/T/L 6/7/7
+   coverage                 mean 0.384 vs 0.383 | diff +0.001 [-0.002, +0.004] | W/T/L 5/8/7
+   feasible_per_day_d0_20   mean 4.998 vs 4.736 | diff +0.262 [+0.026, +0.488] | W/T/L 13/0/7
+   unserved                 mean 123.250 vs 123.350 | diff -0.100 [-0.700, +0.450] | W/T/L 7/8/5
+   missing_feedback         mean 48.400 vs 46.150 | diff +2.250 [-1.900, +5.900] | W/T/L 12/3/5
+   decision diff: 11% of introductions differ from greedy (range 4-20%)

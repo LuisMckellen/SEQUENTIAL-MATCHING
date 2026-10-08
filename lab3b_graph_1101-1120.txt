@@ -1,0 +1,80 @@
+﻿seed 1101 mean feasible pairs/day 3.2, max 24, zero-days 30%, options per matchable 1.32, share of available with >=1 option 3%
+seed 1102 mean feasible pairs/day 1.9, max 10, zero-days 35%, options per matchable 1.19, share of available with >=1 option 2%
+seed 1103 mean feasible pairs/day 1.9, max 13, zero-days 48%, options per matchable 1.21, share of available with >=1 option 2%
+seed 1104 mean feasible pairs/day 2.9, max 19, zero-days 45%, options per matchable 1.41, share of available with >=1 option 2%
+seed 1105 mean feasible pairs/day 2.7, max 15, zero-days 37%, options per matchable 1.30, share of available with >=1 option 3%
+seed 1106 mean feasible pairs/day 2.4, max 11, zero-days 37%, options per matchable 1.30, share of available with >=1 option 2%
+seed 1107 mean feasible pairs/day 2.3, max 27, zero-days 43%, options per matchable 1.18, share of available with >=1 option 2%
+seed 1108 mean feasible pairs/day 3.2, max 16, zero-days 27%, options per matchable 1.35, share of available with >=1 option 3%
+seed 1109 mean feasible pairs/day 2.2, max 13, zero-days 33%, options per matchable 1.22, share of available with >=1 option 2%
+seed 1110 mean feasible pairs/day 2.8, max 16, zero-days 32%, options per matchable 1.28, share of available with >=1 option 3%
+seed 1111 mean feasible pairs/day 3.6, max 34, zero-days 42%, options per matchable 1.36, share of available with >=1 option 3%
+seed 1112 mean feasible pairs/day 4.0, max 32, zero-days 32%, options per matchable 1.28, share of available with >=1 option 3%
+seed 1113 mean feasible pairs/day 3.3, max 33, zero-days 35%, options per matchable 1.29, share of available with >=1 option 3%
+seed 1114 mean feasible pairs/day 2.9, max 20, zero-days 27%, options per matchable 1.31, share of available with >=1 option 3%
+seed 1115 mean feasible pairs/day 3.1, max 14, zero-days 28%, options per matchable 1.33, share of available with >=1 option 3%
+seed 1116 mean feasible pairs/day 4.3, max 36, zero-days 22%, options per matchable 1.34, share of available with >=1 option 4%
+seed 1117 mean feasible pairs/day 2.9, max 14, zero-days 27%, options per matchable 1.27, share of available with >=1 option 3%
+seed 1118 mean feasible pairs/day 1.6, max 12, zero-days 47%, options per matchable 1.23, share of available with >=1 option 2%
+seed 1119 mean feasible pairs/day 3.5, max 27, zero-days 23%, options per matchable 1.31, share of available with >=1 option 3%
+seed 1120 mean feasible pairs/day 3.0, max 29, zero-days 42%, options per matchable 1.31, share of available with >=1 option 3%
+
+SUMMARY development n_seeds = 20
+ feasible pairs per day:       2.88 (range 1.58-4.32)
+ share of zero-pair days:      0.34 (range 0.22-0.48)
+ options per matchable person: 1.29 (range 1.18-1.41)
+ share of available matchable: 0.03 (range 0.02-0.04)
+
+seed 1101 mean feasible pairs/day 0.6, max 5, zero-days 68%, options per matchable 1.05, share of available with >=1 option 1%
+seed 1102 mean feasible pairs/day 0.4, max 3, zero-days 77%, options per matchable 1.03, share of available with >=1 option 0%
+seed 1103 mean feasible pairs/day 0.5, max 3, zero-days 75%, options per matchable 1.12, share of available with >=1 option 1%
+seed 1104 mean feasible pairs/day 0.2, max 3, zero-days 87%, options per matchable 1.04, share of available with >=1 option 0%
+seed 1105 mean feasible pairs/day 0.5, max 4, zero-days 73%, options per matchable 1.05, share of available with >=1 option 1%
+seed 1106 mean feasible pairs/day 0.6, max 6, zero-days 73%, options per matchable 1.04, share of available with >=1 option 1%
+seed 1107 mean feasible pairs/day 0.2, max 2, zero-days 83%, options per matchable 1.03, share of available with >=1 option 0%
+seed 1108 mean feasible pairs/day 0.5, max 4, zero-days 75%, options per matchable 1.10, share of available with >=1 option 0%
+seed 1109 mean feasible pairs/day 0.6, max 6, zero-days 70%, options per matchable 1.04, share of available with >=1 option 1%
+seed 1110 mean feasible pairs/day 0.6, max 5, zero-days 68%, options per matchable 1.12, share of available with >=1 option 1%
+seed 1111 mean feasible pairs/day 0.4, max 4, zero-days 77%, options per matchable 1.07, share of available with >=1 option 0%
+seed 1112 mean feasible pairs/day 0.3, max 5, zero-days 85%, options per matchable 1.05, share of available with >=1 option 0%
+seed 1113 mean feasible pairs/day 0.6, max 6, zero-days 72%, options per matchable 1.09, share of available with >=1 option 1%
+seed 1114 mean feasible pairs/day 0.3, max 4, zero-days 83%, options per matchable 1.03, share of available with >=1 option 0%
+seed 1115 mean feasible pairs/day 0.2, max 2, zero-days 80%, options per matchable 1.00, share of available with >=1 option 0%
+seed 1116 mean feasible pairs/day 0.5, max 4, zero-days 72%, options per matchable 1.05, share of available with >=1 option 1%
+seed 1117 mean feasible pairs/day 0.4, max 5, zero-days 83%, options per matchable 1.11, share of available with >=1 option 0%
+seed 1118 mean feasible pairs/day 0.8, max 4, zero-days 63%, options per matchable 1.15, share of available with >=1 option 1%
+seed 1119 mean feasible pairs/day 0.4, max 4, zero-days 77%, options per matchable 1.04, share of available with >=1 option 1%
+seed 1120 mean feasible pairs/day 0.3, max 6, zero-days 83%, options per matchable 1.10, share of available with >=1 option 0%
+
+SUMMARY sparse n_seeds = 20
+ feasible pairs per day:       0.43 (range 0.22-0.77)
+ share of zero-pair days:      0.76 (range 0.63-0.87)
+ options per matchable person: 1.07 (range 1.00-1.15)
+ share of available matchable: 0.00 (range 0.00-0.01)
+
+seed 1101 mean feasible pairs/day 2.8, max 18, zero-days 22%, options per matchable 1.22, share of available with >=1 option 3%
+seed 1102 mean feasible pairs/day 2.0, max 8, zero-days 42%, options per matchable 1.28, share of available with >=1 option 2%
+seed 1103 mean feasible pairs/day 2.2, max 11, zero-days 35%, options per matchable 1.31, share of available with >=1 option 2%
+seed 1104 mean feasible pairs/day 1.4, max 8, zero-days 55%, options per matchable 1.31, share of available with >=1 option 1%
+seed 1105 mean feasible pairs/day 2.6, max 23, zero-days 43%, options per matchable 1.39, share of available with >=1 option 2%
+seed 1106 mean feasible pairs/day 2.0, max 8, zero-days 42%, options per matchable 1.24, share of available with >=1 option 2%
+seed 1107 mean feasible pairs/day 1.6, max 10, zero-days 47%, options per matchable 1.21, share of available with >=1 option 2%
+seed 1108 mean feasible pairs/day 2.1, max 9, zero-days 28%, options per matchable 1.24, share of available with >=1 option 2%
+seed 1109 mean feasible pairs/day 2.0, max 10, zero-days 38%, options per matchable 1.19, share of available with >=1 option 2%
+seed 1110 mean feasible pairs/day 2.0, max 13, zero-days 48%, options per matchable 1.24, share of available with >=1 option 2%
+seed 1111 mean feasible pairs/day 2.5, max 13, zero-days 35%, options per matchable 1.28, share of available with >=1 option 2%
+seed 1112 mean feasible pairs/day 2.5, max 19, zero-days 35%, options per matchable 1.24, share of available with >=1 option 2%
+seed 1113 mean feasible pairs/day 2.2, max 9, zero-days 35%, options per matchable 1.29, share of available with >=1 option 2%
+seed 1114 mean feasible pairs/day 1.1, max 10, zero-days 67%, options per matchable 1.28, share of available with >=1 option 1%
+seed 1115 mean feasible pairs/day 3.2, max 18, zero-days 33%, options per matchable 1.34, share of available with >=1 option 3%
+seed 1116 mean feasible pairs/day 4.3, max 36, zero-days 45%, options per matchable 1.43, share of available with >=1 option 3%
+seed 1117 mean feasible pairs/day 1.6, max 14, zero-days 48%, options per matchable 1.25, share of available with >=1 option 1%
+seed 1118 mean feasible pairs/day 1.9, max 8, zero-days 42%, options per matchable 1.30, share of available with >=1 option 2%
+seed 1119 mean feasible pairs/day 2.6, max 17, zero-days 35%, options per matchable 1.28, share of available with >=1 option 2%
+seed 1120 mean feasible pairs/day 1.5, max 8, zero-days 43%, options per matchable 1.22, share of available with >=1 option 1%
+
+SUMMARY cold_start n_seeds = 20
+ feasible pairs per day:       2.21 (range 1.07-4.27)
+ share of zero-pair days:      0.41 (range 0.22-0.67)
+ options per matchable person: 1.28 (range 1.19-1.43)
+ share of available matchable: 0.02 (range 0.01-0.03)

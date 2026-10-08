@@ -1,0 +1,47 @@
+﻿experiment h1_learned | records 45 | funnel violations 0
+
+== family development
+ learned_greedy vs greedy: n_seeds = 15
+   mutual_per_100           mean 6.600 vs 6.933 | diff -0.333 [-0.967, +0.233] | W/T/L 6/1/8
+   msmi_per_100             mean 0.567 vs 0.433 | diff +0.133 [-0.033, +0.300] | W/T/L 4/10/1
+   coverage                 mean 0.377 vs 0.378 | diff -0.002 [-0.004, +0.001] | W/T/L 3/6/6
+   feasible_per_day_d0_20   mean 4.740 vs 4.663 | diff +0.076 [-0.216, +0.343] | W/T/L 8/0/7
+   unserved                 mean 124.667 vs 124.333 | diff +0.333 [-0.133, +0.867] | W/T/L 6/6/3
+   missing_feedback         mean 48.467 vs 51.200 | diff -2.733 [-6.800, +1.867] | W/T/L 3/0/12
+   decision diff: 12% of introductions differ from greedy (range 2-22%)
+ learned_mwm vs greedy: n_seeds = 15
+   mutual_per_100           mean 6.933 vs 6.933 | diff +0.000 [-0.533, +0.600] | W/T/L 6/4/5
+   msmi_per_100             mean 0.500 vs 0.433 | diff +0.067 [-0.100, +0.233] | W/T/L 4/9/2
+   coverage                 mean 0.378 vs 0.378 | diff +0.000 [-0.003, +0.003] | W/T/L 5/6/4
+   feasible_per_day_d0_20   mean 4.676 vs 4.663 | diff +0.013 [-0.225, +0.203] | W/T/L 9/0/6
+   unserved                 mean 124.333 vs 124.333 | diff +0.000 [-0.533, +0.533] | W/T/L 4/6/5
+   missing_feedback         mean 49.800 vs 51.200 | diff -1.400 [-4.733, +1.933] | W/T/L 4/0/11
+   decision diff: 12% of introductions differ from greedy (range 2-23%)
+
+experiment h4_resp_prior4 | records 60 | funnel violations 0
+
+== family development
+ resp_greedy vs greedy: n_seeds = 15
+   mutual_per_100           mean 6.633 vs 6.933 | diff -0.300 [-0.933, +0.300] | W/T/L 6/2/7
+   msmi_per_100             mean 0.433 vs 0.433 | diff +0.000 [-0.200, +0.200] | W/T/L 5/5/5
+   coverage                 mean 0.379 vs 0.378 | diff +0.001 [-0.002, +0.004] | W/T/L 7/4/4
+   feasible_per_day_d0_20   mean 4.708 vs 4.663 | diff +0.044 [-0.219, +0.267] | W/T/L 8/0/7
+   unserved                 mean 124.133 vs 124.333 | diff -0.200 [-0.800, +0.400] | W/T/L 4/4/7
+   missing_feedback         mean 47.200 vs 51.200 | diff -4.000 [-7.733, +0.200] | W/T/L 3/1/11
+   decision diff: 12% of introductions differ from greedy (range 2-22%)
+ resp_mwm vs greedy: n_seeds = 15
+   mutual_per_100           mean 6.633 vs 6.933 | diff -0.300 [-0.867, +0.267] | W/T/L 6/1/8
+   msmi_per_100             mean 0.500 vs 0.433 | diff +0.067 [-0.100, +0.233] | W/T/L 5/7/3
+   coverage                 mean 0.380 vs 0.378 | diff +0.002 [-0.002, +0.006] | W/T/L 7/4/4
+   feasible_per_day_d0_20   mean 4.638 vs 4.663 | diff -0.025 [-0.248, +0.175] | W/T/L 7/1/7
+   unserved                 mean 123.933 vs 124.333 | diff -0.400 [-1.133, +0.333] | W/T/L 4/4/7
+   missing_feedback         mean 48.667 vs 51.200 | diff -2.533 [-7.533, +3.133] | W/T/L 3/1/11
+   decision diff: 11% of introductions differ from greedy (range 2-23%)
+ resp_thompson vs greedy: n_seeds = 15
+   mutual_per_100           mean 6.767 vs 6.933 | diff -0.167 [-0.667, +0.300] | W/T/L 6/2/7
+   msmi_per_100             mean 0.433 vs 0.433 | diff +0.000 [-0.200, +0.200] | W/T/L 5/5/5
+   coverage                 mean 0.380 vs 0.378 | diff +0.001 [-0.002, +0.005] | W/T/L 6/5/4
+   feasible_per_day_d0_20   mean 4.689 vs 4.663 | diff +0.025 [-0.184, +0.210] | W/T/L 8/1/6
+   unserved                 mean 124.067 vs 124.333 | diff -0.267 [-1.000, +0.467] | W/T/L 4/5/6
+   missing_feedback         mean 48.667 vs 51.200 | diff -2.533 [-6.267, +1.133] | W/T/L 5/0/10
+   decision diff: 11% of introductions differ from greedy (range 2-25%)

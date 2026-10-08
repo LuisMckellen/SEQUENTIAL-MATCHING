@@ -1,0 +1,15 @@
+﻿1049 labels, base rate 0.461
+emotional_availability_agree     -0.58
+relationship_goal_agree          +0.53
+relationship_goal_disagree       -0.51
+space_for_relationship_disagree  +0.44
+emotional_availability_disagree  -0.37
+relationship_pace_disagree       -0.31
+lifestyle_agree                  +0.30
+space_for_relationship_agree     +0.19
+relocate_agree                   -0.15
+conversations_agree              +0.14
+lifestyle_disagree               +0.11
+conversations_disagree           +0.09
+relationship_pace_agree          +0.04
+relocate_disagree                +0.01

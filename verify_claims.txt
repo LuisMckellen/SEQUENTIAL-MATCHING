@@ -1,0 +1,24 @@
+﻿C1  declined hard field  | note: 33% of members, 42% under cold_start
+    development  33% (range 28%-40%, n=20)
+    cold_start   41% (range 34%-49%, n=20)
+    sparse       32% (range 25%-37%, n=20)
+
+C2  supplied greedy, development 1001-1015, n=15
+    introductions/episode  | note: about 92       | 92.6 (range 60.0-129.0, n=15)
+    coverage               | note: about 0.38     | 0.378
+    mutual/MSMI event ratio | note: about 15x      | 16.0x (6.93 vs 0.43 per 100)
+    MSMI events/episode    | note: about one      | 0.87
+
+C3  graph, development 1101-1120, n_seeds=20, 1200 seed-days
+    available per day      | note: about 150      | median 160 (range 112-177)
+    of them, all hard known| note: 50-106         | range 35-120
+    feasible pairs per day | note: 0-29           | range 0-36, mean 2.88
+    options per matchable  | note: 1.0-1.9        | range 1.00-2.60 (per day)
+
+C4  supplied baseline files (organisers, seed 101)
+    greedy   MSMI/100 0.50  coverage 0.408
+    no_asks  MSMI/100 0.33  coverage 0.174
+    random   MSMI/100 0.25  coverage 0.412
+    note: baselines score 0.25-0.5 MSMI/100; removing clarification cuts coverage 0.41 -> 0.17
+
+C5  one in-process episode | note: about 5 s      | 3.0 s
