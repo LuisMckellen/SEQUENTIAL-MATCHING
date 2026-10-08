@@ -17,5 +17,7 @@ h1c_*.pkl
 results_with_dup*.jsonl
 h1_model_run*.pkl
 
-# Personal study notes (kept locally, not in the repo)
+# Personal study notes and mentor instructions (kept locally, not in the repo)
 LEARNING_LABS.md
+AGENTS.md
+/METHOD.md
