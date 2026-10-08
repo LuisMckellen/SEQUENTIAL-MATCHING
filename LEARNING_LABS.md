@@ -125,6 +125,25 @@ Policies: `greedy` (list-order asks), `voi_greedy` (value-based asks), `voi_mwm`
   `python3 summ.py h4_resp_prior4 greedy 1101-1120` (the seed filter keeps fresh seeds apart from Lab 6's).
 - Check: does it spread introductions more evenly, or change nothing (Lab 3 again)?
 
+
+### Lab 11 — How much could asking ever add? (~12 min compute) → workshop 2, slides 9 and 15–16
+The ceiling: what greedy would get if every non-declined hard answer were known (perfect clarification).
+It reads hidden truth, so it is analysis only and never goes near the policy.
+```
+python3 exp.py development 1101-1120          # rerun: the new runner records funnel stages
+python3 exp.py cold_start 1101-1120
+python3 ceiling_policy_ANALYSIS_ONLY.py development 1101-1120
+python3 ceiling_policy_ANALYSIS_ONLY.py cold_start 1101-1120
+python3 gap_and_funnel.py development 1101-1120
+python3 gap_and_funnel.py cold_start 1101-1120
+```
+- Predict first: does perfect clarification raise coverage and mutual acceptances, or only feasible pairs?
+- (1) **Headroom:** ceiling minus greedy. If coverage and MSMI headroom are ~0, no asking strategy can move them.
+- (2) **Gap closed:** what share of the headroom `voi_*` covers. Printed only where headroom is real.
+- (3) **Funnel stages:** where introductions are lost (no response, declined, no date, date too late,
+  no second meeting, success). The biggest leak is where the next lever is.
+- The rerun duplicates your lab9 records with identical numbers plus a `stages` field; dedupe by key as before.
+
 ---
 
 ## After the labs you should be able to explain
@@ -135,3 +154,4 @@ Policies: `greedy` (list-order asks), `voi_greedy` (value-based asks), `voi_mwm`
 5. Why we need seeds, pairs and intervals (Labs 5–6)
 6. What learning weights does, and its limits (Lab 7)
 7. Whether question order helps — your own finding (Lab 9)
+8. How much asking could ever add, and where introductions are lost (Lab 11)
