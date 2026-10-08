@@ -16,13 +16,14 @@ Always run as `PYTHONHASHSEED=0 PYTHONPATH=. python <script> ...`. Seeds accept 
 | `per_person.py <experiment> <policy> <family> <seeds>` | C | Introductions per served member (upper bound on labels per person) | stdout |
 | `h1_scale.py <seeds> [n_boot]` | 7c | Many random-feasible rollouts (use 3001-3130): episode-level bootstrap, split halves, learning curve at 8/16/32/64/all rollouts | `h1c_groups_<a>_<b>.pkl` (cache, not committed) |
 | `h1_holdout.py <train seeds> <test seeds> [family]` | 7d | AUC for a directional Yes on held-out rollouts: greedy's equal-field count vs model on 8 rollouts vs on all. Run `h1_scale.py` first | `h1c_groups_<a>_<b>[_family].pkl` |
+| `lab12_waiting.py <family> <seeds> ["policies"]` | 12 | H5 reserve (protected and pure) vs always match, plus the learned score vs greedy, using the Lab 7c model | `results.jsonl` (lab12_waiting) |
 | `ceiling_policy_ANALYSIS_ONLY.py <family> <seeds>` | 11 | Workshop 2, slide 9: greedy with perfect clarification (hidden non-declined hard answers revealed free). Reads hidden truth: analysis only | `results.jsonl` (ceiling_perfect_asks) |
 | `gap_and_funnel.py <family> <seeds>` | 11 | Workshop 2, slides 9 and 15-16: headroom to the ceiling, % of the gap each lab9 policy closes, and where introductions leave the funnel | stdout |
 | `world_ceiling_ANALYSIS_ONLY.py` | — | Reads hidden truth. Analysis only, never in a policy | stdout |
 
 Every result line carries `experiment`, `policy`, `family`, `seed`, `funnel_ok`, the introductions made (`pairs`) and `env` (versions, git SHA, PYTHONHASHSEED).
 
-Seeds: preliminary training 2001-2008; preliminary test 1001-1015 (reproduce only, never tune); new experiments 1101-1120 (now seen for H3; new policy experiments start at 1121); acceptance model at scale: train 3001-3130, held-out test 3131-3150.
+Seeds: preliminary training 2001-2008; preliminary test 1001-1015 (reproduce only, never tune); new experiments 1101-1120 (now seen for H3; new policy experiments start at 1121); acceptance model at scale: train 3001-3130, held-out test 3131-3150; Lab 12: 1121-1140 and replication 1141-1160.
 Official pools (data_manifest.json, problem statement §4): train public_01-06 = seeds 20261000-20261005, validation public_07-08 = 20261006-20261007, development test public_09-10 = 20261008-20261009. `generate(seed, 200, pool_id, variant)` with these seeds reproduces the supplied pools.
 In-process numbers are for exploring. Final reported numbers come from `evaluate.py` running `policy.py`.
 Approximate runtime: 5 s per episode on one core.

@@ -176,6 +176,18 @@ Expect 410 + 4 × 60 = 650 lines in results.jsonl. Watch `date_too_late` in dela
 - Paired bootstrap over held-out episodes. Seeds must not overlap training (the script asserts this).
 - This is a PROXY (workshop 2): better ranking reaches MSMI only through the ~12% of introductions a policy changes.
 
+### Lab 12 — Does waiting help, and does the learned score reach outcomes? (~30 min compute) → H5 and H1
+Script: `hackathon_files\lab12_waiting.py` (needs `h1c_groups_3001_3130.pkl` from Lab 7c in the repo root).
+- Same asks (supplied list order), same learned score (the Lab 7c model), same seeds; only the reserve changes.
+- `learned_tau0` = always match. `learned_tau0.10` / `learned_tau0.12` = the note's reserve WITH its two protections
+  (no reserve for people never introduced; a person's only option is never postponed).
+  `learned_tau0.12_pure` = the same reserve with NO protections (pure waiting). `greedy` = supplied baseline.
+- Step 1: both families, seeds 1121–1140, all five policies. Step 2 (replication): seeds 1141–1160, three policies.
+- **Predict first:** (1) How often will the protected reserve change a decision, given ~1.3 options per person?
+  (2) Does pure waiting raise or lower MSMI, mutual acceptances and coverage? (3) Does the learned score beat greedy on MSMI?
+- **Read it with METHOD.md:** check `n_seeds` and the decision-diff line first. A 0.2 MSMI difference is about four
+  qualifying pairs over 20 episodes; a result counts only if it holds on BOTH seed blocks (1121–1140 and 1141–1160).
+
 ### Check C — How much history per person? (seconds, no new runs)
 `python hackathon_files\per_person.py lab9_asking greedy development 1101-1120`
 - If most served members get 1–2 introductions, per-person reply and Yes rates rest on 1–2 labels: that bounds H4.
@@ -191,3 +203,4 @@ Expect 410 + 4 × 60 = 650 lines in results.jsonl. Watch `date_too_late` in dela
 6. What learning weights does, its limits, and how many rollouts make weights trustworthy (Labs 7–7d)
 7. Whether question order helps — your own finding (Lab 9)
 8. How much asking could ever add, and where introductions are lost (Lab 11)
+9. Whether waiting helps when options are this scarce, and why a replication block matters (Lab 12)
