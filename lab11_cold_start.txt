@@ -1,0 +1,33 @@
+﻿family cold_start | seeds with greedy + ceiling: 20
+
+(1) Ceiling vs greedy (headroom that perfect clarification would add)
+  feasible_per_day_d0_20   greedy 3.255  ceiling 5.448  headroom +2.193 [+1.740, +2.667]
+  coverage                 greedy 0.312  ceiling 0.313  headroom +0.001 [-0.002, +0.004]
+  mutual_per_100           greedy 5.800  ceiling 5.950  headroom +0.150 [-0.450, +0.775]
+  msmi_per_100             greedy 0.400  ceiling 0.425  headroom +0.025 [-0.225, +0.250]
+  unserved                 greedy 137.550  ceiling 137.350  headroom -0.200 [-0.800, +0.400]
+
+(2) Gap closed toward the ceiling = mean(policy - greedy) / mean(ceiling - greedy)
+  voi_greedy   feasible_per_day_d0_20      22% of the gap [+14%, +31%]  (n=20)
+  voi_greedy   coverage                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   mutual_per_100           headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   msmi_per_100             headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   unserved                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_maxcard  feasible_per_day_d0_20      16% of the gap [+9%, +22%]  (n=20)
+  voi_maxcard  coverage                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_maxcard  mutual_per_100           headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_maxcard  msmi_per_100             headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_maxcard  unserved                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_mwm      feasible_per_day_d0_20      16% of the gap [+10%, +22%]  (n=20)
+  voi_mwm      coverage                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_mwm      mutual_per_100           headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_mwm      msmi_per_100             headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_mwm      unserved                 headroom not distinguishable from 0 -> gap closed not meaningful
+
+(3) Where introductions leave the funnel (share of all introductions, pooled over seeds)
+  policy               intros       no_response          declined           no_date     date_too_late no_second_meeting           success
+  greedy                 1421     592 ( 41.7%)     597 ( 42.0%)      47 (  3.3%)       0 (  0.0%)     169 ( 11.9%)      16 (  1.1%)
+  voi_greedy             1455     632 ( 43.4%)     611 ( 42.0%)      52 (  3.6%)       0 (  0.0%)     147 ( 10.1%)      13 (  0.9%)
+  voi_maxcard            1457     634 ( 43.5%)     605 ( 41.5%)      54 (  3.7%)       0 (  0.0%)     149 ( 10.2%)      15 (  1.0%)
+  voi_mwm                1453     641 ( 44.1%)     591 ( 40.7%)      54 (  3.7%)       0 (  0.0%)     152 ( 10.5%)      15 (  1.0%)
+  perfect_asks_greedy    1479     642 ( 43.4%)     599 ( 40.5%)      45 (  3.0%)       0 (  0.0%)     176 ( 11.9%)      17 (  1.1%)
