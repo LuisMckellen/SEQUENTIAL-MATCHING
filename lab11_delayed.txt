@@ -1,0 +1,21 @@
+﻿family delayed | seeds with greedy + ceiling: 20
+
+(1) Ceiling vs greedy (headroom that perfect clarification would add)
+  feasible_per_day_d0_20   greedy 4.657  ceiling 6.876  headroom +2.219 [+1.781, +2.700]
+  coverage                 greedy 0.382  ceiling 0.381  headroom -0.001 [-0.003, +0.001]
+  mutual_per_100           greedy 6.825  ceiling 6.750  headroom -0.075 [-0.725, +0.600]
+  msmi_per_100             greedy 0.450  ceiling 0.375  headroom -0.075 [-0.250, +0.100]
+  unserved                 greedy 123.600  ceiling 123.850  headroom +0.250 [-0.150, +0.650]
+
+(2) Gap closed toward the ceiling = mean(policy - greedy) / mean(ceiling - greedy)
+  voi_greedy   feasible_per_day_d0_20      22% of the gap [+14%, +31%]  (n=20)
+  voi_greedy   coverage                 headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   mutual_per_100           headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   msmi_per_100             headroom not distinguishable from 0 -> gap closed not meaningful
+  voi_greedy   unserved                 headroom not distinguishable from 0 -> gap closed not meaningful
+
+(3) Where introductions leave the funnel (share of all introductions, pooled over seeds)
+  policy               intros       no_response          declined           no_date     date_too_late no_second_meeting           success
+  greedy                 1722     707 ( 41.1%)     742 ( 43.1%)      54 (  3.1%)       2 (  0.1%)     199 ( 11.6%)      18 (  1.0%)
+  voi_greedy             1713     716 ( 41.8%)     715 ( 41.7%)      60 (  3.5%)       3 (  0.2%)     198 ( 11.6%)      21 (  1.2%)
+  perfect_asks_greedy    1755     736 ( 41.9%)     749 ( 42.7%)      68 (  3.9%)       4 (  0.2%)     183 ( 10.4%)      15 (  0.9%)

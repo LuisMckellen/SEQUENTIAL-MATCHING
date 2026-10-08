@@ -1,0 +1,16 @@
+﻿1049 labels from 660 introductions; 200 bootstrap refits over introductions
+weight                              full       95% interval    half A    half B  verdict
+emotional_availability_agree       -0.58  [ -1.03,  -0.13]     +0.05     -0.86  interval excludes 0 but halves disagree
+relationship_goal_agree            +0.53  [ -0.05,  +1.07]     +0.19     +0.84  not distinguishable from 0
+relationship_goal_disagree         -0.51  [ -1.08,  -0.03]     -0.95     -0.06  distinguishable
+space_for_relationship_disagree    +0.44  [ +0.04,  +0.90]     +0.53     +0.19  distinguishable
+emotional_availability_disagree    -0.37  [ -0.80,  +0.04]     +0.35     -0.68  not distinguishable from 0
+relationship_pace_disagree         -0.31  [ -0.80,  +0.13]     -0.38     -0.30  not distinguishable from 0
+lifestyle_agree                    +0.30  [ -0.15,  +0.81]     +0.06     +0.60  not distinguishable from 0
+space_for_relationship_agree       +0.19  [ -0.34,  +0.67]     -0.03     +0.22  not distinguishable from 0
+relocate_agree                     -0.15  [ -0.74,  +0.36]     -0.16     -0.12  not distinguishable from 0
+conversations_agree                +0.14  [ -0.45,  +0.70]     +0.23     -0.14  not distinguishable from 0
+lifestyle_disagree                 +0.11  [ -0.31,  +0.59]     -0.15     +0.32  not distinguishable from 0
+conversations_disagree             +0.09  [ -0.41,  +0.61]     +0.18     -0.16  not distinguishable from 0
+relationship_pace_agree            +0.04  [ -0.47,  +0.52]     +0.00     -0.01  not distinguishable from 0
+relocate_disagree                  +0.01  [ -0.43,  +0.57]     +0.02     +0.03  not distinguishable from 0

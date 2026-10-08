@@ -1,0 +1,8 @@
+﻿lab9_asking/greedy/development: 20 seeds, 1533 served member-episodes
+introductions per served member: mean 2.32, median 2, max 8
+distribution: 1: 41%, 2: 24%, 3: 16%, 4: 8%, 5+: 11%
+Each introduction gives that member one response label at most, so these are also upper bounds on labels per person.
+lab9_asking/greedy/cold_start: 20 seeds, 1249 served member-episodes
+introductions per served member: mean 2.28, median 2, max 8
+distribution: 1: 43%, 2: 23%, 3: 15%, 4: 9%, 5+: 10%
+Each introduction gives that member one response label at most, so these are also upper bounds on labels per person.
