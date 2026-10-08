@@ -7,3 +7,4 @@ results/
 
 results_with_dup*.jsonl
 h1_model_run*.pkl
+h1c_*.pkl

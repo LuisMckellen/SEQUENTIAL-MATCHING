@@ -10,14 +10,14 @@ from sklearn.linear_model import LogisticRegression
 from kit import SOFT
 import h1
 
-def collect_pairs(seeds):
+def collect_pairs(seeds, family='development'):
     """Labels grouped by introduction: returns list of (features list, labels list) per introduction."""
     import random as _r
     from kit import generate, Simulator, baseline_asks
     from runner import feasible_edges
     groups = []
     for s in seeds:
-        sim = Simulator(generate(s, 200, 'evaluation', 'development')); snap = {}
+        sim = Simulator(generate(s, 200, 'evaluation', family)); snap = {}
         for d in range(60):
             sim.resolve_asks(baseline_asks(sim.observe()))
             st = sim.observe(); mem = {m['member_id']: m for m in st['members']}

@@ -161,6 +161,21 @@ Expect 410 + 4 × 60 = 650 lines in results.jsonl. Watch `date_too_late` in dela
 - "distinguishable" needs BOTH an interval excluding 0 AND the same sign in both halves of the training seeds.
 - The bootstrap resamples introductions, not single labels: both answers to one introduction share chemistry.
 
+### Lab 7c — With enough rollouts, are the weights real? (~10 min compute) → the "too few labels" fix
+`python hackathon_files\h1_scale.py 3001-3130 200`
+- Seeds 3001–3130 are a NEW block. Random-feasible rollouts, time-correct features, revealed responses only (same rules as Lab 7).
+- The bootstrap now resamples whole EPISODES. People never cross episodes, so this also handles one person appearing in many labels (7b could not).
+- Learning curve at 8 / 16 / 32 / 64 / 130 rollouts: interval width and which weights pass.
+- **Predict first:** which fields will pass at 130 rollouts? Does any unused field pass at 16 or 32?
+- Labels are cached in `h1c_groups_3001_3130.pkl` (regenerable; don't commit it).
+
+### Lab 7d — Does the learned model rank Yes better than greedy, on held-out worlds? (~2 min each)
+`python hackathon_files\h1_holdout.py 3001-3130 3131-3150`
+`python hackathon_files\h1_holdout.py 3001-3130 3131-3150 shift`
+- AUC for "this person says Yes" on 20 held-out rollouts: greedy's count of equal fields vs a model trained on 8 rollouts vs on 130.
+- Paired bootstrap over held-out episodes. Seeds must not overlap training (the script asserts this).
+- This is a PROXY (workshop 2): better ranking reaches MSMI only through the ~12% of introductions a policy changes.
+
 ### Check C — How much history per person? (seconds, no new runs)
 `python hackathon_files\per_person.py lab9_asking greedy development 1101-1120`
 - If most served members get 1–2 introductions, per-person reply and Yes rates rest on 1–2 labels: that bounds H4.
@@ -173,6 +188,6 @@ Expect 410 + 4 × 60 = 650 lines in results.jsonl. Watch `date_too_late` in dela
 3. Whether scarcity is real and where (Lab 3b) and whether changes reach decisions (Lab 6)
 4. Why the score is a funnel and is rare (Lab 4)
 5. Why we need seeds, pairs and intervals (Labs 5–6)
-6. What learning weights does, and its limits (Lab 7)
+6. What learning weights does, its limits, and how many rollouts make weights trustworthy (Labs 7–7d)
 7. Whether question order helps — your own finding (Lab 9)
 8. How much asking could ever add, and where introductions are lost (Lab 11)
