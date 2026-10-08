@@ -17,3 +17,5 @@ h1c_*.pkl
 results_with_dup*.jsonl
 h1_model_run*.pkl
 
+# Personal study notes (kept locally, not in the repo)
+LEARNING_LABS.md
