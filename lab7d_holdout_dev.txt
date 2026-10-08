@@ -1,0 +1,7 @@
+﻿held-out (development): 2860 revealed responses from 1778 introductions, 20 rollouts (seeds 3131-3150); Yes rate 0.476
+training: 17539 labels (130 rollouts); L8 uses the first 8 rollouts
+AUC greedy  0.523  [0.504, 0.544]
+AUC L8      0.574  [0.558, 0.589]
+AUC Lfull   0.574  [0.560, 0.590]
+diff Lfull-greedy +0.051  [+0.025, +0.081]
+diff Lfull-L8     -0.000  [-0.012, +0.014]

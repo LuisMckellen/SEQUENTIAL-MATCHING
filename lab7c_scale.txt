@@ -1,0 +1,39 @@
+﻿  collected seeds 3001-3010  (25s)
+  collected seeds 3011-3020  (50s)
+  collected seeds 3021-3030  (76s)
+  collected seeds 3031-3040  (100s)
+  collected seeds 3041-3050  (125s)
+  collected seeds 3051-3060  (151s)
+  collected seeds 3061-3070  (176s)
+  collected seeds 3071-3080  (202s)
+  collected seeds 3081-3090  (227s)
+  collected seeds 3091-3100  (252s)
+  collected seeds 3101-3110  (278s)
+  collected seeds 3111-3120  (303s)
+  collected seeds 3121-3130  (328s)
+
+== ALL ROLLOUTS: 17539 labels from 10837 introductions, 130 rollouts ==
+   bootstrap over episodes; halves = seeds 3001-3065 vs 3066-3130
+weight                              full       95% interval   half A   half B  verdict
+relationship_goal_disagree         -0.50  [ -0.65,  -0.35]    -0.56    -0.44  distinguishable
+relationship_goal_agree            +0.49  [ +0.34,  +0.63]    +0.43    +0.54  distinguishable
+relationship_pace_agree            +0.35  [ +0.21,  +0.49]    +0.51    +0.20  distinguishable
+conversations_agree                +0.25  [ +0.11,  +0.38]    +0.36    +0.14  distinguishable
+lifestyle_agree                    +0.18  [ +0.02,  +0.31]    +0.11    +0.25  distinguishable
+relocate_agree                     +0.17  [ -0.01,  +0.30]    +0.13    +0.20  not distinguishable from 0
+lifestyle_disagree                 -0.10  [ -0.23,  +0.04]    -0.14    -0.05  not distinguishable from 0
+relationship_pace_disagree         -0.09  [ -0.21,  +0.05]    -0.05    -0.13  not distinguishable from 0
+emotional_availability_agree       -0.09  [ -0.24,  +0.07]    -0.07    -0.11  not distinguishable from 0
+relocate_disagree                  +0.09  [ -0.05,  +0.22]    +0.04    +0.12  not distinguishable from 0
+emotional_availability_disagree    -0.09  [ -0.22,  +0.06]    -0.08    -0.09  not distinguishable from 0
+space_for_relationship_disagree    -0.07  [ -0.20,  +0.08]    -0.04    -0.09  not distinguishable from 0
+space_for_relationship_agree       -0.05  [ -0.21,  +0.08]    -0.08    -0.02  not distinguishable from 0
+conversations_disagree             -0.05  [ -0.16,  +0.07]    +0.03    -0.13  not distinguishable from 0
+
+== Learning curve (episode bootstrap, same verdict rule) ==
+ rollouts   labels    mean interval width    distinguishable
+        8     1075                   0.97                  1   relationship_goal_disagree
+       16     2188                   0.67                  5   relationship_goal_agree, relationship_goal_disagree, relationship_pace_agree, space_for_relationship_agree, relocate_agree
+       32     4367                   0.47                  6   relationship_goal_agree, relationship_goal_disagree, relationship_pace_agree, conversations_agree, space_for_relationship_agree, space_for_relationship_disagree
+       64     8635                   0.39                  4   relationship_goal_agree, relationship_goal_disagree, relationship_pace_agree, conversations_agree
+      130    17539                   0.28                  5   relationship_goal_agree, relationship_goal_disagree, relationship_pace_agree, lifestyle_agree, conversations_agree
