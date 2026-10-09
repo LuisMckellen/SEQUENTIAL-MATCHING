@@ -100,11 +100,6 @@ Our policy is intended to improve upon these by combining reciprocal feasibility
 
 ## Goal
 
-The objective is to develop a reproducible sequential decision system that balances:
-
-**Matching quality + Information value + Availability + Constraints**
-
-rather than optimizing pair compatibility in isolation.
 
 ## Disclaimer
 
