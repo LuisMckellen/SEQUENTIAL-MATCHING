@@ -1,7 +1,6 @@
 # Sequential Matching and Information Acquisition for Reciprocal Introductions Under Incomplete Information and Dynamic Constraints
 
 ### EmptyBrains | IITM
-
 ## The Sequential Matching Problem
 
 This project addresses **The One Introduction Problem**, where a system must decide who should be introduced to whom in a changing population with incomplete information.
