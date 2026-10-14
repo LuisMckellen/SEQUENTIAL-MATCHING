@@ -89,20 +89,18 @@ Our policy is intended to improve upon these by combining reciprocal feasibility
 
 `policy.py` with no arguments runs **method** mode:
 
-- **Asks:** the supplied list-order asks within the daily 12-unit budget.
-- **Matching:** maximum-weight matching (Edmonds' blossom, `networkx`) over feasible, never-before-proposed pairs, weight `1 + soft score`. This replaces the greedy pass, which can block two good pairs with one mediocre one.
-- **Safety:** every proposal is validated before it is returned. If validation, the time limit or the `networkx` import fails, the policy falls back to the supplied greedy baseline, then to an empty list.
+- **Asks and matching:** the supplied list-order asks and greedy matching over feasible, never-before-proposed pairs.
+- **Validity layer:** every response is validated before it is returned. On any failure or timeout the policy falls back to the supplied baseline, then to an empty list, so an episode cannot become invalid.
+- **Explanations:** one JSON record per decision on stderr, separating missing data, model uncertainty and stochastic outcomes (PS §9).
 
-**Admission rule.** A component was kept only if it showed a gain on mutual acceptances in at least one family and no detected loss in any family on 20 fresh seeds per family, with paired bootstrap intervals against greedy.
+**Admission rule (pre-registered in Round 1).** A component enters only with a replicated gain on mutual acceptances in at least one family and no detected loss in any family. The test uses 20 fresh seeds per family and paired bootstrap intervals against greedy.
 
-| Component | Seeds 1201–1220 | Decision |
-|---|---|---|
-| L1 blossom matching | no loss in any family; coverage gain in cold_start | **kept** |
-| L2 value-of-information asks | sparse MSMI −0.25 per 100 [−0.45, −0.05] | **cut** (ablation) |
+| Component | Admission block 1201–1220 | Replication block 1221–1240 | Decision |
+|---|---|---|---|
+| L1 maximum-weight (blossom) matching | no detected loss | delayed: mutual acceptances −1.00 per 100 [−1.95, −0.05] | **cut** |
+| L2 value-of-information asks | sparse: MSMI −0.25 per 100 [−0.45, −0.05] | – | **cut** |
 
-L1 was replicated on seeds 1221–1240: RESULT_REPLICATION.
-
-**Evaluation.** Declared seeds 1181–1200, all six variants (120 episodes per policy). RESULT_TABLE
+The full results, failure analysis and limitations are in [REPORT.md](REPORT.md). The per-family tables are in `results/final_tables.md`.
 
 ### Reproduce
 
@@ -110,7 +108,7 @@ L1 was replicated on seeds 1221–1240: RESULT_REPLICATION.
 pip install -r requirements.txt
 python -m unittest test_method test_fallback
 python evaluate.py --policy policy_default.py --seeds 1181,...,1200 --variants all --output results/method.json
-python hackathon_files/round2_admission.py 1201-1220 2           # admission
+python hackathon_files/round2_admission.py 1201-1220 2           # admission (and 1221-1240 greedy,L1_blossom for replication)
 python hackathon_files/round2_summary.py 1201-1220
 python hackathon_files/final_tables.py > results/final_tables.md
 docker build -t sequential-policy:submission .
@@ -124,7 +122,8 @@ python evaluate.py --image sequential-policy:submission --seeds 101
 ```text
 .
 ├── kit.py, evaluate.py      # supplied simulator and evaluator
-├── policy.py                # submission policy (method mode + baselines + fallback)
+├── policy.py                # submission policy (method mode + baselines + fallback + explanations)
+├── REPORT.md                # final technical report
 ├── policy_default.py        # local stand-in for the container entrypoint
 ├── test_method.py, test_fallback.py
 ├── hackathon_files/         # experiments: admission, summaries, tables
