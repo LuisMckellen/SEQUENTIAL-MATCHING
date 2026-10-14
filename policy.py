@@ -29,7 +29,7 @@ FINAL_RESERVE_SECONDS = 0.3
 
 ASK_PHASE = "ask"
 MATCH_PHASE = "match"
-VALID_MODES = {"greedy", "no_asks", "random"}
+VALID_MODES = {"method", "greedy", "no_asks", "random"}
 
 
 class _DeadlineError(Exception):
@@ -315,10 +315,77 @@ def _random_match(state: dict[str, Any]) -> list[list[str]]:
     return result
 
 
+# ---------------------------------------------------------------------------
+# Our method (mode "method", the default when no --baseline is given).
+# Observable state only. Components enter under the Section 6 admission rule;
+# see README "Method" for the runs that admitted or cut each one.
+# ---------------------------------------------------------------------------
+
+USE_BLOSSOM = True       # L1: whole-pool maximum-weight matching instead of greedy
+USE_VALUE_ASKS = False   # L2: cut (loss in sparse MSMI on seeds 1201-1220); list-order asks are kept
+
+
+def _soft_score(a: dict[str, Any], b: dict[str, Any]) -> int:
+    """The supplied baseline's score: number of equal, known soft fields."""
+    return sum(a["fields"].get(k) is not None and a["fields"].get(k) == b["fields"].get(k) for k in SOFT)
+
+
+def _blossom_match(state: dict[str, Any]) -> list[list[str]]:
+    """Maximum-weight matching over every feasible, never-introduced pair (weight 1 + soft score)."""
+    members = [m for m in state["members"] if m.get("available")]
+    past = _clean_past_pairs(state)
+    edges = []
+    for a, b in itertools.combinations(members, 2):
+        key = tuple(sorted((a["member_id"], b["member_id"])))
+        if key in past or eligibility(a, b)["status"] != "feasible":
+            continue
+        edges.append((key[0], key[1], 1.0 + _soft_score(a, b)))
+    degree: dict[str, int] = {}
+    for a, b, _ in edges:
+        degree[a] = degree.get(a, 0) + 1
+        degree[b] = degree.get(b, 0) + 1
+    if all(degree[a] == 1 and degree[b] == 1 for a, b, _ in edges):
+        # Every feasible pair is isolated, so the maximum-weight matching is all of them.
+        # This skips importing networkx (about 0.4 s) on most days.
+        return sorted([a, b] for a, b, _ in edges)
+    import networkx as nx  # imported lazily; any failure falls back to the greedy baseline
+
+    graph = nx.Graph()
+    graph.add_weighted_edges_from(edges)
+    return sorted(sorted(p) for p in nx.max_weight_matching(graph))
+
+
+def _value_asks(state: dict[str, Any]) -> list[dict[str, str]]:
+    """Ask constraints of the members whose answer could unlock the most partners."""
+    members = state["members"]
+    declined = lambda m: any(m["field_status"][k] == "declined" for k in HARD)
+    missing = lambda m: any(m["fields"][k] is None for k in HARD)
+    candidates = [m for m in members if m.get("available") and missing(m) and not declined(m)]
+    known = [m for m in members if not missing(m)]
+    unknown = [m for m in members if missing(m) and not declined(m)]
+    scored = []
+    for m in candidates:
+        ok = lambda j: j["member_id"] != m["member_id"] and eligibility(m, j)["status"] != "infeasible"
+        score = (sum(1 for j in known if j.get("available") and ok(j))
+                 + 0.5 * sum(1 for j in known if ok(j)) + 0.2 * sum(1 for j in unknown if ok(j)))
+        scored.append((score, m["member_id"]))
+    scored.sort(reverse=True)
+    budget = int(state.get("ask_budget_remaining", 0)) // 3
+    return [{"member_id": i, "field": "constraints"} for score, i in scored[:budget] if score > 0]
+
+
+def _method_actions(state: dict[str, Any], phase: str) -> list[Any]:
+    if phase == ASK_PHASE:
+        return _value_asks(state) if USE_VALUE_ASKS else baseline_asks(state)
+    return _blossom_match(state) if USE_BLOSSOM else baseline_match(state)
+
+
 def _get_actions_for_mode(
     state: dict[str, Any], phase: str, baseline_name: str = "greedy"
 ) -> list[Any]:
     """Get the selected baseline's actions for the current phase."""
+    if baseline_name == "method":
+        return _method_actions(state, phase)
     if phase == ASK_PHASE:
         if baseline_name == "no_asks":
             return []
@@ -473,7 +540,7 @@ def _emit(response: dict[str, Any]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--baseline", choices=sorted(VALID_MODES), default="greedy"
+        "--baseline", choices=sorted(VALID_MODES), default="method"
     )
     args = parser.parse_args(argv)
 
