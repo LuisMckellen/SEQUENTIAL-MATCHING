@@ -26,14 +26,9 @@ Install: `pip install networkx numpy scikit-learn`. Seeds accept `1101-1120` or 
 | `h1_holdout.py <train seeds> <test seeds> [family]` | 7d | AUC for a directional Yes on held-out rollouts: greedy's equal-field count vs model on 8 rollouts vs on all. Run `h1_scale.py` first | `lab_results/cache/h1c_groups_<a>_<b>[_family].pkl` |
 | `lab12_waiting.py <family> <seeds> ["policies"]` | 12 | H5 reserve (protected and pure) vs always match, plus the learned score vs greedy, using the Lab 7c model | `lab_results/results.jsonl` (lab12_waiting) |
 | `lab12_resume.py [budget_seconds]` | 12 | Runs only the Lab 12 episodes not yet recorded, within a time budget (for shells that stop long jobs) | `lab_results/results.jsonl` (lab12_waiting) |
-| `ceiling_policy_ANALYSIS_ONLY.py <family> <seeds>` | 11 | Workshop 2, slide 9: greedy with perfect clarification (hidden non-declined hard answers revealed free). Reads hidden truth: analysis only | `lab_results/results.jsonl` (ceiling_perfect_asks) |
 | `gap_and_funnel.py <family> <seeds>` | 11 | Workshop 2, slides 9 and 15-16: headroom to the ceiling, % of the gap each lab9 policy closes, and where introductions leave the funnel | stdout |
 | `lab13_learners.py` | 13 | Observable learners: reply rates learned from feedback (posterior mean or Thompson sample) and Yes tendency, on top of the Lab 7c field model | imported |
-| `lab13_ceiling_ANALYSIS_ONLY.py` | 13 | Oracle rankers that read hidden truth (reply rates, person traits, full profiles, all of them, perfect foresight) and the expected-outcome formula. Analysis only | imported |
-| `lab13_run_ANALYSIS_ONLY.py [budget_seconds]` | 13 | Runs greedy, the five oracles and three learners on seeds 1161-1180 (development, cold start); resumable | `lab_results/results.jsonl` (lab13_ceilings) |
-| `lab13_expected_ANALYSIS_ONLY.py` | 13 | Expected MSMI per episode (true success chance summed over the introductions made), paired diffs vs greedy, calibration check | `lab_results/summaries/lab13_ceilings_1161-1180.txt` |
 | `verify_claims.py` | check | Re-checks numbers quoted in the note from observable data, the results files and the supplied baseline results | stdout |
-| `world_ceiling_ANALYSIS_ONLY.py` | - | Reads hidden truth. Analysis only, never in a policy | stdout |
 
 Every result line carries `experiment`, `policy`, `family`, `seed`, `funnel_ok`, the introductions made (`pairs`) and `env` (versions, git SHA, PYTHONHASHSEED).
 
@@ -59,14 +54,12 @@ Every result line carries `experiment`, `policy`, `family`, `seed`, `funnel_ok`,
 | 7d | `lab7d_holdout_dev.txt`, `lab7d_holdout_shift.txt` | 3131-3150 |
 | 8 | `lab8_toy.txt` | toy example |
 | 9 | `lab9_summ_1101-1120.txt` | 1101-1120 |
-| 11, 11b | `lab11_<family>.txt`, `ceiling_ANALYSIS_ONLY.txt` | 1101-1120 |
+| 11, 11b | `lab11_<family>.txt` | 1101-1120 |
 | C | `per_person.txt` | 1101-1120 |
 | 12 | `lab12_h1_<seeds>.txt` (learned score vs greedy), `lab12_h5_<seeds>.txt` (waiting) | 1121-1140, 1141-1160, pooled 1121-1160 |
-| 13 | `lab13_ceilings_1161-1180.txt` (ranking ceilings and learners, expected and actual MSMI) | 1161-1180 |
 | Claim check | `verify_claims.txt` | as listed in the file |
 
-Files named `*ANALYSIS_ONLY*` come from runs that read hidden simulator data; they are for analysis only and never used by a policy.
-Integrity check: every line of `results.jsonl` is valid JSON, no (experiment, policy, family, seed) key appears twice, and every record has `funnel_ok = true` (1,330 records after Lab 13).
+Integrity check: every line of `results.jsonl` is valid JSON, no (experiment, policy, family, seed) key appears twice, and every record has `funnel_ok = true` (see lab_results/results.jsonl).
 
 ## Seeds
 
