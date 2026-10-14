@@ -26,7 +26,7 @@ This matches the central finding of our Round 1 note (H1): in these worlds, poli
 | Explanations | One JSON record per decision on stderr (Section 6). It never changes the response |
 
 - **Fixed limits:** a stage deadline using SIGALRM, with a clock check where SIGALRM does not exist; 1 MiB caps on the request, response, memory and diagnostics.
-- **Runtime:** the slowest call measured was below 1 s, including Python startup. The limit is 10 s.
+- **Runtime:** the slowest single call measured was 0.27 s including Python startup (limit 10 s). Total inference time per episode on the declared seeds: mean 18.1 s, maximum 21.0 s over 200 members and 100 days (about 200 calls).
 - **Dependencies:** the container image uses the standard library only.
 
 ## 3. Results on the declared evaluation seeds
