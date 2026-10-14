@@ -1,0 +1,32 @@
+Source file: lab_results/results.jsonl
+Experiment filter: lab12_waiting
+All source records: 970
+Filtered records: 320
+
+Duplicate full keys: 0
+
+Metric availability:
+  n_arrived: 320/320
+  assignments: 320/320
+  mutual_acceptances: 320/320
+  dates: 320/320
+  msmi: 320/320
+  msmi_per_100: 320/320
+  mutual_per_100: 320/320
+  coverage: 320/320
+  unserved: 320/320
+  ask_cost: 320/320
+  missing_feedback: 320/320
+  wait_median_days: 320/320
+  wait_mean_days: 320/320
+  feasible_per_day_d0_20: 320/320
+
+Funnel violations: 0
+
+Seed-block coverage:
+block1: 200 rows; 20 seeds
+  Policies: ['greedy', 'learned_tau0', 'learned_tau0.10', 'learned_tau0.12', 'learned_tau0.12_pure']
+  Families: ['cold_start', 'development']
+block2: 120 rows; 20 seeds
+  Policies: ['greedy', 'learned_tau0', 'learned_tau0.12_pure']
+  Families: ['cold_start', 'development']
