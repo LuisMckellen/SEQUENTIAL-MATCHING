@@ -11,10 +11,10 @@ import random
 from collections import Counter, defaultdict
 from pathlib import Path
 
-SOURCE = Path("lab_results/results.jsonl")
-OUT = Path("lab_results/reporting")
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SOURCE = REPO_ROOT / "lab_results" / "results.jsonl"
+OUT = REPO_ROOT / "lab_results" / "reporting"
 EXPERIMENT = "lab12_waiting"
-
 BOOTSTRAPS = 5000
 RNG = random.Random(20261014)
 
@@ -358,9 +358,12 @@ def summarize_pair_differences(rows):
         if baseline is None:
             continue
 
+        baseline_pairs = baseline.get("pairs") or []
+
         base_pairs = {
             pair_key(pair)
-            for pair in baseline.get("pairs", [])
+            for pair in baseline_pairs
+            if isinstance(pair, (list, tuple)) and len(pair) == 2
         }
         base_pairs.discard(None)
 
@@ -368,9 +371,12 @@ def summarize_pair_differences(rows):
             if policy == "greedy":
                 continue
 
+            candidate_pair_list = candidate.get("pairs") or []
+
             candidate_pairs = {
                 pair_key(pair)
-                for pair in candidate.get("pairs", [])
+                for pair in candidate_pair_list
+                if isinstance(pair, (list, tuple)) and len(pair) == 2
             }
             candidate_pairs.discard(None)
 
