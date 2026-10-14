@@ -9,6 +9,12 @@ import unittest
 from kit import generate, Simulator, baseline_asks, baseline_match
 import policy
 
+try:
+    import networkx  # noqa: F401
+    HAS_NX = True
+except ImportError:
+    HAS_NX = False
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -43,8 +49,21 @@ class TestMethod(unittest.TestCase):
         match_state = sim.observe()
         req = {'phase': 'match', 'state': match_state, 'memory': None}
         self.assertEqual(run_cli(req, '--baseline', 'greedy')['pairs'], baseline_match(match_state))
-        self.assertEqual(run_cli(req)['pairs'], policy._blossom_match(match_state))
+        self.assertEqual(run_cli(req)['pairs'], baseline_match(match_state))  # blossom cut (H4)
 
+    def test_explanations_on_stderr_never_change_the_response(self):
+        sim = Simulator(generate(1181, 200, 'evaluation', 'development'))
+        sim.resolve_asks(baseline_asks(sim.observe()))
+        req = {'phase': 'match', 'state': sim.observe(), 'memory': None}
+        proc = subprocess.run([sys.executable, 'policy.py'], input=json.dumps(req),
+                              capture_output=True, text=True, cwd=HERE, timeout=60)
+        pairs = json.loads(proc.stdout)['pairs']
+        record = json.loads(proc.stderr.strip().splitlines()[-1])
+        self.assertEqual([d['pair'] for d in record['decisions']], pairs)
+        self.assertTrue(all(d['checks'] == 'feasible' for d in record['decisions']))
+        self.assertNotIn('truth', proc.stderr)  # never a latent simulator value
+
+    @unittest.skipUnless(HAS_NX, 'networkx not installed (only the rejected blossom candidate needs it)')
     def test_blossom_never_returns_fewer_score_points_than_greedy(self):
         sim = Simulator(generate(1182, 200, 'evaluation', 'development'))
         sim.resolve_asks(baseline_asks(sim.observe()))
@@ -65,10 +84,12 @@ class TestMethod(unittest.TestCase):
             return real_import(name, *a, **k)
 
         builtins.__import__ = no_networkx
+        old, policy.USE_BLOSSOM = policy.USE_BLOSSOM, True
         try:
             out = policy.decide({'phase': 'match', 'state': state, 'memory': None}, 'method')
         finally:
             builtins.__import__ = real_import
+            policy.USE_BLOSSOM = old
         self.assertEqual(out['pairs'], baseline_match(state))
 
     def test_value_asks_respect_budget_and_declines(self):

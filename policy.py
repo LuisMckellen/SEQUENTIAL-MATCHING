@@ -321,7 +321,7 @@ def _random_match(state: dict[str, Any]) -> list[list[str]]:
 # see README "Method" for the runs that admitted or cut each one.
 # ---------------------------------------------------------------------------
 
-USE_BLOSSOM = True       # L1: whole-pool maximum-weight matching instead of greedy
+USE_BLOSSOM = False      # L1 (H4): cut - loss in delayed mutual acceptances on replication seeds 1221-1240
 USE_VALUE_ASKS = False   # L2: cut (loss in sparse MSMI on seeds 1201-1220); list-order asks are kept
 
 
@@ -378,6 +378,46 @@ def _method_actions(state: dict[str, Any], phase: str) -> list[Any]:
     if phase == ASK_PHASE:
         return _value_asks(state) if USE_VALUE_ASKS else baseline_asks(state)
     return _blossom_match(state) if USE_BLOSSOM else baseline_match(state)
+
+
+MAX_EXPLAIN_BYTES = 256 * 1024  # stderr has the same 1 MiB cap; stay well inside it
+
+
+def _side(m: dict[str, Any]) -> dict[str, Any]:
+    """What is observed vs unresolved for one member. Never a latent simulator value."""
+    status = m.get("field_status", {})
+    return {
+        "id": m["member_id"],
+        "hard_unknown": [k for k in HARD if m["fields"].get(k) is None and status.get(k) != "declined"],
+        "declined": sorted(k for k, v in status.items() if v == "declined"),
+        "soft_known": sum(m["fields"].get(k) is not None for k in SOFT),
+    }
+
+
+def explain(state: dict[str, Any], phase: str, actions: list[Any]) -> dict[str, Any]:
+    """One record per decision, separating three kinds of uncertainty (PS section 9):
+    missing data (unknown/declined fields), model uncertainty (the score is a heuristic
+    count, not a calibrated probability), and stochastic outcomes (no response observed yet)."""
+    by_id = {m["member_id"]: m for m in state.get("members", [])}
+    records = []
+    if phase == ASK_PHASE:
+        for a in actions:
+            m = by_id[a["member_id"]]
+            records.append({"ask": a, "why": "hard constraints unknown; an answer can unlock or rule out pairs",
+                            "member": _side(m)})
+    else:
+        for a, b in actions:
+            ma, mb = by_id[a], by_id[b]
+            e = eligibility(ma, mb)
+            records.append({
+                "pair": [a, b],
+                "checks": e["status"],  # always 'feasible': hard constraints are never overridden
+                "evidence": {"soft_matches": _soft_score(ma, mb), "of_known_soft_fields": [_side(ma)["soft_known"], _side(mb)["soft_known"]]},
+                "missing_data": [_side(ma), _side(mb)],
+                "model_uncertainty": "score is a count of equal known soft fields; not a probability",
+                "stochastic_outcome": "both responses unobserved until their deadlines",
+            })
+    return {"day": state.get("day"), "phase": phase, "decisions": records}
 
 
 def _get_actions_for_mode(
@@ -566,6 +606,13 @@ def main(argv: list[str] | None = None) -> int:
     if phase not in (ASK_PHASE, MATCH_PHASE):
         response = _empty_response(ASK_PHASE)
     _emit(response)
+    if args.baseline == "method" and phase in (ASK_PHASE, MATCH_PHASE):
+        try:  # explanations are diagnostics only: any failure here never changes the response
+            record = json.dumps(explain(request["state"], phase, response[_response_key(phase)]), separators=(",", ":"))
+            if len(record) <= MAX_EXPLAIN_BYTES:
+                sys.stderr.write(record + "\n")
+        except Exception:
+            pass
     return 0
 
 

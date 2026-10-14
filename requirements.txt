@@ -1,3 +1,3 @@
 # The organisers' kit uses only the Python standard library.
-# Our policy (policy.py, method mode) uses networkx for maximum-weight matching (BSD-3-Clause licence).
+# Experiments only: the rejected blossom candidate (USE_BLOSSOM, hackathon_files) uses networkx (BSD-3-Clause). The submitted policy and Docker image do not need it.
 networkx==3.6.1
