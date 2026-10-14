@@ -21,3 +21,7 @@ h1_model_run*.pkl
 LEARNING_LABS.md
 AGENTS.md
 /METHOD.md
+
+# Team plans and submission drafts (kept locally; only lab_results/ is tracked)
+round1/
+round2/

@@ -28,6 +28,10 @@ Install: `pip install networkx numpy scikit-learn`. Seeds accept `1101-1120` or 
 | `lab12_resume.py [budget_seconds]` | 12 | Runs only the Lab 12 episodes not yet recorded, within a time budget (for shells that stop long jobs) | `lab_results/results.jsonl` (lab12_waiting) |
 | `ceiling_policy_ANALYSIS_ONLY.py <family> <seeds>` | 11 | Workshop 2, slide 9: greedy with perfect clarification (hidden non-declined hard answers revealed free). Reads hidden truth: analysis only | `lab_results/results.jsonl` (ceiling_perfect_asks) |
 | `gap_and_funnel.py <family> <seeds>` | 11 | Workshop 2, slides 9 and 15-16: headroom to the ceiling, % of the gap each lab9 policy closes, and where introductions leave the funnel | stdout |
+| `lab13_learners.py` | 13 | Observable learners: reply rates learned from feedback (posterior mean or Thompson sample) and Yes tendency, on top of the Lab 7c field model | imported |
+| `lab13_ceiling_ANALYSIS_ONLY.py` | 13 | Oracle rankers that read hidden truth (reply rates, person traits, full profiles, all of them, perfect foresight) and the expected-outcome formula. Analysis only | imported |
+| `lab13_run_ANALYSIS_ONLY.py [budget_seconds]` | 13 | Runs greedy, the five oracles and three learners on seeds 1161-1180 (development, cold start); resumable | `lab_results/results.jsonl` (lab13_ceilings) |
+| `lab13_expected_ANALYSIS_ONLY.py` | 13 | Expected MSMI per episode (true success chance summed over the introductions made), paired diffs vs greedy, calibration check | `lab_results/summaries/lab13_ceilings_1161-1180.txt` |
 | `verify_claims.py` | check | Re-checks numbers quoted in the note from observable data, the results files and the supplied baseline results | stdout |
 | `world_ceiling_ANALYSIS_ONLY.py` | - | Reads hidden truth. Analysis only, never in a policy | stdout |
 
@@ -58,13 +62,14 @@ Every result line carries `experiment`, `policy`, `family`, `seed`, `funnel_ok`,
 | 11, 11b | `lab11_<family>.txt`, `ceiling_ANALYSIS_ONLY.txt` | 1101-1120 |
 | C | `per_person.txt` | 1101-1120 |
 | 12 | `lab12_h1_<seeds>.txt` (learned score vs greedy), `lab12_h5_<seeds>.txt` (waiting) | 1121-1140, 1141-1160, pooled 1121-1160 |
+| 13 | `lab13_ceilings_1161-1180.txt` (ranking ceilings and learners, expected and actual MSMI) | 1161-1180 |
 | Claim check | `verify_claims.txt` | as listed in the file |
 
 Files named `*ANALYSIS_ONLY*` come from runs that read hidden simulator data; they are for analysis only and never used by a policy.
-Integrity check: every line of `results.jsonl` is valid JSON, no (experiment, policy, family, seed) key appears twice, and every record has `funnel_ok = true` (970 records as of commit 5fa3efd).
+Integrity check: every line of `results.jsonl` is valid JSON, no (experiment, policy, family, seed) key appears twice, and every record has `funnel_ok = true` (1,330 records after Lab 13).
 
 ## Seeds
 
-Preliminary training 2001-2008; preliminary test 1001-1015 (reproduce only, never tune); main experiments 1101-1120; acceptance model at scale: train 3001-3130, held-out test 3131-3150; Lab 12: 1121-1140 and replication 1141-1160. Seeds up to 1160 are spent; new experiments start at 1161.
+Preliminary training 2001-2008; preliminary test 1001-1015 (reproduce only, never tune); main experiments 1101-1120; acceptance model at scale: train 3001-3130, held-out test 3131-3150; Lab 12: 1121-1140 and replication 1141-1160; Lab 13: 1161-1180. Seeds up to 1180 are spent; new experiments start at 1181.
 Official pools (data_manifest.json, problem statement §4): train public_01-06 = seeds 20261000-20261005, validation public_07-08 = 20261006-20261007, development test public_09-10 = 20261008-20261009. `generate(seed, 200, pool_id, variant)` with these seeds reproduces the supplied pools.
 In-process numbers are for exploring. Final reported numbers come from `evaluate.py` running `policy.py`. Approximate runtime: 3-6 s per episode on one core.
