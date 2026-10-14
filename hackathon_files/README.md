@@ -43,7 +43,7 @@ Every result line carries `experiment`, `policy`, `family`, `seed`, `funnel_ok`,
 |---|---|---|
 | `results.jsonl` | One record per episode (experiment, policy, family, seed, metrics, funnel stages, introductions, environment) | yes |
 | `graph.jsonl` | Daily feasible-graph diagnostics | yes |
-| `models/h1_model.pkl` | Acceptance model from Lab 7 (seeds 2001-2008) | yes |
+| `models/h1_model.pkl` | Acceptance model from Lab 7 (seeds 2001-2008) | regenerate with `h1.py` (not tracked) |
 | `summaries/` | Text output of every lab (table below); save new summaries here with `Out-File` | yes |
 | `LAB_REPORT.md` | The lab write-ups (Labs 0-9 and checks) | yes |
 | `cache/` | Label caches for Labs 7c, 7d and 12 (regenerable) | no |

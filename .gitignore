@@ -7,21 +7,18 @@ __pycache__/
 .env
 .env.*
 
-# Kit evaluator output folder (ignored by the kit's default)
+# Evaluator output is ignored by default. The submitted results are added explicitly (git add -f results/<file>).
 results/
 
-# Lab artefacts that are regenerable or superseded
-lab_results/cache/
-lab_results/archive/
-h1c_*.pkl
-results_with_dup*.jsonl
-h1_model_run*.pkl
-
-# Local working notes (not part of the submission)
-LEARNING_LABS.md
+# Local-only files that must never enter the repository
 AGENTS.md
+CLAUDE.md
 /METHOD.md
-
-# Team plans and submission drafts (kept locally; only lab_results/ is tracked)
+LEARNING_LABS.md
 round1/
 round2/
+_private*/
+*.pkl
+lab_results/cache/
+lab_results/archive/
+results_with_dup*.jsonl
