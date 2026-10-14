@@ -16,28 +16,33 @@ from kit import baseline_asks, baseline_match, eligibility
 # ---------------------------------------------------------------------------
 
 _deadline_exceeded = False
+_phase_start = None
+
+
+class _DeadlineError(Exception):
+    pass
 
 
 def _deadline_handler(signum, frame):
-    """SIGALRM handler — set flag; policy logic checks this flag."""
-    global _deadline_exceeded
-    _deadline_exceeded = True
+    """SIGALRM handler — interrupt execution."""
+    raise _DeadlineError("deadline exceeded")
 
 
 def _set_deadline():
     """Install a 7‑second real-time alarm and record start time."""
-    global _deadline_exceeded
+    global _deadline_exceeded, _phase_start
     _deadline_exceeded = False
     signal.signal(signal.SIGALRM, _deadline_handler)
     signal.alarm(7)  # fire after ~7 seconds
-    _phase_start = time.time()
+    _phase_start = time.monotonic()
 
 
 def _check_deadline():
-    """Return True if deadline has elapsed (7s wall-clock)."""
+    """Return True if deadline has elapsed."""
+    global _phase_start
     if _phase_start is None:
         return False
-    return (time.time() - _phase_start) > 7.0 or _deadline_exceeded
+    return (time.monotonic() - _phase_start) > 7.0 or _deadline_exceeded
 
 
 def _cancel_deadline():
@@ -72,8 +77,10 @@ def _validate_ask_response(response, state):
 
     # Validate EVERY ask — if ANY is invalid, return ok=False
     seen = set()  # (member_id, field) pairs for duplicate detection
+    seen_members = set()  # each member appears at most once
     ask_budget = state.get('ask_budget_remaining', 12)
     total_cost = 0
+    from kit import SOFT, HARD
 
     for ask in asks:
         # Shape check
@@ -90,7 +97,6 @@ def _validate_ask_response(response, state):
             return False, {'asks': [], 'memory': response.get('memory', {})}
 
         # Field must be constraints or a permitted soft field
-        from kit import SOFT
         if field not in ['constraints'] + SOFT:
             return False, {'asks': [], 'memory': response.get('memory', {})}
 
@@ -99,10 +105,31 @@ def _validate_ask_response(response, state):
         if member is None or not member.get('available', False):
             return False, {'asks': [], 'memory': response.get('memory', {})}
 
-        # No duplicate member/field requests — a member appears at most once per batch
+        # Each member appears at most once per ask batch
+        if member_id in seen_members:
+            return False, {'asks': [], 'memory': response.get('memory', {})}
+        seen_members.add(member_id)
+
+        # No duplicate member/field requests
         if (member_id, field) in seen:
             return False, {'asks': [], 'memory': response.get('memory', {})}
         seen.add((member_id, field))
+
+        # Constraints bundle validity
+        f = member.get('fields', {})
+        fs = member.get('field_status', {})
+        if field == 'constraints':
+            any_hard_declined = any(fs.get(k) == 'declined' for k in HARD)
+            if any_hard_declined:
+                return False, {'asks': [], 'memory': response.get('memory', {})}
+            has_unknown_hard = any(f.get(k) is None and fs.get(k) != 'declined' for k in HARD)
+            if not has_unknown_hard:
+                return False, {'asks': [], 'memory': response.get('memory', {})}
+        else:
+            if f.get(field) is not None:
+                return False, {'asks': [], 'memory': response.get('memory', {})}
+            if fs.get(field) == 'declined':
+                return False, {'asks': [], 'memory': response.get('memory', {})}
 
         # Cost enforcement — total cost must not exceed budget
         cost = 3 if field == 'constraints' else 1
@@ -177,13 +204,10 @@ def _validate_match_response(response, state):
         if elig.get('status') != 'feasible':
             return False, {'pairs': [], 'memory': response.get('memory', {})}
 
-        # Note: pairs already in past_pairs are structurally valid but may be
-        # blocked by the simulator's advance(). The validator checks structural
-        # correctness only; the simulator's advance() enforces the introduction
-        # blocking rules. Per the data contract: "Explicitly check outstanding
-        # introductions using only observable state and the documented simulator
-        # semantics; do not incorrectly block all historically introduced members
-        # forever." So we do NOT check past_pairs here — that's the simulator's job.
+        # Reject exact pairs already introduced
+        pair_key = tuple(sorted((a, b)))
+        if pair_key in past_pairs:
+            return False, {'pairs': [], 'memory': response.get('memory', {})}
 
     # All pairs passed validation
     return True, {'pairs': pairs, 'memory': response.get('memory', {})}
@@ -193,21 +217,52 @@ def _validate_match_response(response, state):
 # Fallback-aware policy decision (Task B)
 # ---------------------------------------------------------------------------
 
+def _get_actions_for_mode(state, phase, baseline_name='greedy'):
+    """Get actions according to baseline mode."""
+    if phase == 'ask':
+        if baseline_name == 'no_asks':
+            return []
+        # greedy and random use baseline_asks behavior for asks
+        return baseline_asks(state)
+    else:  # match phase
+        if baseline_name == 'random':
+            # Use random feasible behavior
+            members = [m for m in state['members'] if m['available']]
+            import itertools
+            from kit import eligibility
+            past = {tuple(sorted((i['user_a'], i['user_b']))) for i in state['introductions']}
+            edges = []
+            for a, b in itertools.combinations(members, 2):
+                key = tuple(sorted((a['member_id'], b['member_id'])))
+                if key in past or eligibility(a, b)['status'] != 'feasible':
+                    continue
+                edges.append(key)
+            # Randomize edges
+            import random as r
+            r.shuffle(edges)
+            used = set()
+            out = []
+            for pair in edges:
+                if not used.intersection(pair):
+                    out.append(list(pair))
+                    used.update(pair)
+            return out
+        else:
+            # greedy (and default)
+            return baseline_match(state)
+
+
 def _run_phase_with_fallback(state, phase, baseline_name='greedy'):
     """Run the full policy, then baseline, then empty list — with deadline.
 
     Returns (actions, memory) tuple suitable for the protocol.
     """
-    memory = None
+    memory = {}
 
     # ── Step 1: Try the full policy (with deadline awareness) ──
     try:
         _set_deadline()
-        # Build the full-policy output using the mode-appropriate logic.
-        if phase == 'ask':
-            full_actions = baseline_asks(state)
-        else:
-            full_actions = baseline_match(state)
+        full_actions = _get_actions_for_mode(state, phase, baseline_name)
         full_memory = memory
 
         # Validate the full-policy output.
@@ -218,29 +273,24 @@ def _run_phase_with_fallback(state, phase, baseline_name='greedy'):
             ok, validated = _validate_match_response(
                 {'pairs': full_actions, 'memory': full_memory}, state)
         if ok:
-            # Also ensure memory is JSON-safe.
             try:
                 _ = json.dumps(validated['memory'], allow_nan=False)
-            except (TypeError, ValueError):
-                pass
-            _cancel_deadline()
-            return validated['asks'] if phase == 'ask' else validated['pairs'], validated['memory']
+            except (TypeError, ValueError, OverflowError):
+                pass  # fall through to baseline
+            else:
+                _cancel_deadline()
+                return validated['asks'] if phase == 'ask' else validated['pairs'], validated['memory']
+    except _DeadlineError:
+        pass  # fall through to baseline
     except Exception:
-        pass  # fall through to baseline — but we still need to cancel deadline
+        pass  # fall through to baseline
     finally:
-        # If we took too long, make sure the deadline is cancelled before trying baseline.
-        if _check_deadline():
-            _cancel_deadline()
+        _cancel_deadline()
 
     # ── Step 2: Try the baseline for this phase ──
     try:
-        if baseline_name == 'greedy':
-            base_actions = baseline_asks(state) if phase == 'ask' else baseline_match(state)
-        elif baseline_name == 'no_asks':
-            base_actions = [] if phase == 'ask' else baseline_match(state)
-        else:  # random
-            base_actions = baseline_asks(state) if phase == 'ask' else baseline_match(state)
-        base_memory = None
+        base_actions = _get_actions_for_mode(state, phase, baseline_name)
+        base_memory = {}
 
         # Validate baseline output.
         if phase == 'ask':
@@ -252,10 +302,12 @@ def _run_phase_with_fallback(state, phase, baseline_name='greedy'):
         if ok:
             try:
                 _ = json.dumps(validated['memory'], allow_nan=False)
-            except (TypeError, ValueError):
+            except (TypeError, ValueError, OverflowError):
                 pass
             _cancel_deadline()
             return validated['asks'] if phase == 'ask' else validated['pairs'], validated['memory']
+    except _DeadlineError:
+        pass
     except Exception:
         pass  # fall through to empty list
 
@@ -268,34 +320,42 @@ def decide(request, mode='greedy'):
     """Entry point matching the expected policy signature.
 
     request — dict with 'phase', 'state', 'memory'
-    mode — unused compatibility arg; the function always applies the fallback chain.
+    mode — baseline mode (greedy|no_asks|random)
     """
     global _phase_start
     _phase_start = None  # reset per-phase
 
-    state = request['state']
+    try:
+        state = request['state']
+    except Exception:
+        return {'asks': [], 'memory': {}}
     memory = request.get('memory') or {}
 
     if request['phase'] == 'ask':
-        _set_deadline()
-        actions, mem = _run_phase_with_fallback(state, 'ask', mode)
-        _cancel_deadline()
-        # Preserve memory across phases; ensure JSON safety
+        try:
+            actions, mem = _run_phase_with_fallback(state, 'ask', mode)
+        except _DeadlineError:
+            return {'asks': [], 'memory': {}}
+        except Exception:
+            return {'asks': [], 'memory': {}}
         out_mem = mem if mem is not None else {}
         try:
             json.dumps(out_mem, allow_nan=False)
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, OverflowError):
             out_mem = {}
         return {'asks': actions, 'memory': out_mem}
 
     if request['phase'] == 'match':
-        _set_deadline()
-        actions, mem = _run_phase_with_fallback(state, 'match', mode)
-        _cancel_deadline()
+        try:
+            actions, mem = _run_phase_with_fallback(state, 'match', mode)
+        except _DeadlineError:
+            return {'pairs': [], 'memory': {}}
+        except Exception:
+            return {'pairs': [], 'memory': {}}
         out_mem = mem if mem is not None else {}
         try:
             json.dumps(out_mem, allow_nan=False)
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, OverflowError):
             out_mem = {}
         return {'pairs': actions, 'memory': out_mem}
 
