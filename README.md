@@ -85,16 +85,54 @@ We consider simple baseline strategies such as:
 
 Our policy is intended to improve upon these by combining reciprocal feasibility, information acquisition, and sequential allocation.
 
+## Our Method (Round 2 submission)
+
+`policy.py` with no arguments runs **method** mode:
+
+- **Asks:** the supplied list-order asks within the daily 12-unit budget.
+- **Matching:** maximum-weight matching (Edmonds' blossom, `networkx`) over feasible, never-before-proposed pairs, weight `1 + soft score`. This replaces the greedy pass, which can block two good pairs with one mediocre one.
+- **Safety:** every proposal is validated before it is returned. If validation, the time limit or the `networkx` import fails, the policy falls back to the supplied greedy baseline, then to an empty list.
+
+**Admission rule.** A component was kept only if it showed a gain on mutual acceptances in at least one family and no detected loss in any family on 20 fresh seeds per family, with paired bootstrap intervals against greedy.
+
+| Component | Seeds 1201–1220 | Decision |
+|---|---|---|
+| L1 blossom matching | no loss in any family; coverage gain in cold_start | **kept** |
+| L2 value-of-information asks | sparse MSMI −0.25 per 100 [−0.45, −0.05] | **cut** (ablation) |
+
+L1 was replicated on seeds 1221–1240: RESULT_REPLICATION.
+
+**Evaluation.** Declared seeds 1181–1200, all six variants (120 episodes per policy). RESULT_TABLE
+
+### Reproduce
+
+```bash
+pip install -r requirements.txt
+python -m unittest test_method test_fallback
+python evaluate.py --policy policy_default.py --seeds 1181,...,1200 --variants all --output results/method.json
+python hackathon_files/round2_admission.py 1201-1220 2           # admission
+python hackathon_files/round2_summary.py 1201-1220
+python hackathon_files/final_tables.py > results/final_tables.md
+docker build -t sequential-policy:submission .
+python evaluate.py --image sequential-policy:submission --seeds 101
+```
+
+`policy_default.py` only calls `policy.main([])`. It exists because `evaluate.py` always passes `--baseline`, while the container runs the default method mode.
+
 ## Repository Structure
 
 ```text
 .
-├── data/
-├── docs/
-├── src/
-├── tests/
-├── README.md
-└── requirements.txt
+├── kit.py, evaluate.py      # supplied simulator and evaluator
+├── policy.py                # submission policy (method mode + baselines + fallback)
+├── policy_default.py        # local stand-in for the container entrypoint
+├── test_method.py, test_fallback.py
+├── hackathon_files/         # experiments: admission, summaries, tables
+├── lab_results/             # raw experiment rows (results.jsonl)
+├── results/                 # B1–B3 baselines, method.json, final_tables.md
+├── data/, docs/, examples/
+├── Dockerfile, requirements.txt
+└── README.md
 ```
 
 ## Goal
