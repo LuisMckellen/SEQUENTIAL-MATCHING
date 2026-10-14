@@ -1,0 +1,43 @@
+Lab 13 ceilings | experiment lab13_ceilings | records 360 | funnel violations 0
+Expected MSMI = sum over the introductions made of the true P(qualifying outcome) (analysis only).
+
+Sanity check, mean over all episodes: expected vs actual MSMI per 100
+  greedy       expected 0.400 | actual 0.525 | n=40
+  O_foresight  expected 0.401 | actual 0.688 | n=40
+  O_full       expected 0.408 | actual 0.487 | n=40
+  O_people     expected 0.406 | actual 0.412 | n=40
+  O_resp       expected 0.405 | actual 0.487 | n=40
+  O_profile    expected 0.407 | actual 0.537 | n=40
+  L_people     expected 0.400 | actual 0.463 | n=40
+  L_resp       expected 0.398 | actual 0.562 | n=40
+  L_resp_ts    expected 0.402 | actual 0.438 | n=40
+
+== cold_start: 20 seeds; greedy expected MSMI 0.358, actual 0.500, no-response share 0.417
+  policy       expected MSMI diff       actual MSMI diff         mutual/100 diff        no-response diff       coverage diff        differ
+  O_foresight  +0.005 [-0.008, +0.016]  +0.225 [+0.025, +0.450]  -0.150 [-0.875, +0.600] -0.022 [-0.051, +0.006] -0.002 [-0.005, +0.001] 8%
+  O_full       +0.011 [+0.000, +0.021]  +0.025 [-0.150, +0.200]  -0.250 [-0.950, +0.450] -0.024 [-0.052, +0.002] -0.001 [-0.003, +0.002] 8%
+  O_people     +0.003 [-0.009, +0.014]  -0.075 [-0.275, +0.125]  -0.550 [-1.350, +0.125] -0.016 [-0.042, +0.012] +0.001 [-0.002, +0.004] 9%
+  O_resp       +0.002 [-0.007, +0.010]  +0.025 [-0.175, +0.225]  -0.500 [-1.225, +0.200] -0.001 [-0.024, +0.020] +0.000 [-0.003, +0.003] 9%
+  O_profile    +0.001 [-0.008, +0.009]  +0.175 [-0.050, +0.425]  +0.150 [-0.625, +1.000] -0.028 [-0.054, -0.001] -0.002 [-0.005, +0.001] 8%
+  L_people     -0.000 [-0.010, +0.008]  +0.025 [-0.175, +0.225]  +0.100 [-0.625, +0.850] -0.015 [-0.039, +0.006] +0.000 [-0.002, +0.003] 8%
+  L_resp       -0.002 [-0.013, +0.008]  +0.150 [-0.050, +0.350]  +0.250 [-0.425, +1.025] -0.017 [-0.041, +0.006] -0.001 [-0.003, +0.002] 8%
+  L_resp_ts    +0.003 [-0.004, +0.011]  -0.075 [-0.300, +0.175]  -0.125 [-0.850, +0.600] -0.013 [-0.044, +0.017] -0.001 [-0.004, +0.003] 9%
+  share of the O_full headroom (expected MSMI) captured by each learner:
+    L_resp     -19%
+    L_resp_ts  +31%
+    L_people   -5%
+
+== development: 20 seeds; greedy expected MSMI 0.442, actual 0.550, no-response share 0.417
+  policy       expected MSMI diff       actual MSMI diff         mutual/100 diff        no-response diff       coverage diff        differ
+  O_foresight  -0.003 [-0.023, +0.013]  +0.100 [-0.175, +0.425]  +0.225 [-0.375, +0.900] -0.004 [-0.026, +0.018] -0.002 [-0.007, +0.003] 10%
+  O_full       +0.005 [-0.012, +0.021]  -0.100 [-0.400, +0.200]  +0.075 [-0.475, +0.675] -0.002 [-0.024, +0.020] -0.001 [-0.006, +0.004] 11%
+  O_people     +0.009 [-0.003, +0.021]  -0.150 [-0.400, +0.100]  -0.025 [-0.525, +0.500] -0.003 [-0.028, +0.022] -0.001 [-0.005, +0.003] 11%
+  O_resp       +0.008 [-0.004, +0.019]  -0.100 [-0.350, +0.150]  -0.050 [-0.650, +0.550] -0.001 [-0.032, +0.030] +0.001 [-0.003, +0.005] 12%
+  O_profile    +0.013 [-0.004, +0.031]  -0.150 [-0.375, +0.025]  -0.175 [-0.825, +0.550] -0.004 [-0.027, +0.018] -0.001 [-0.005, +0.004] 11%
+  L_people     -0.000 [-0.012, +0.011]  -0.150 [-0.400, +0.075]  -0.075 [-0.575, +0.425] +0.000 [-0.020, +0.021] -0.000 [-0.005, +0.004] 10%
+  L_resp       -0.002 [-0.016, +0.010]  -0.075 [-0.325, +0.150]  -0.025 [-0.600, +0.575] +0.012 [-0.008, +0.034] -0.002 [-0.007, +0.002] 10%
+  L_resp_ts    +0.000 [-0.017, +0.017]  -0.100 [-0.275, +0.075]  +0.125 [-0.275, +0.525] -0.024 [-0.047, +0.002] +0.002 [-0.003, +0.006] 10%
+  share of the O_full headroom (expected MSMI) captured by each learner:
+    L_resp     -41%
+    L_resp_ts  +2%
+    L_people   -0%
