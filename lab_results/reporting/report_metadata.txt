@@ -1,0 +1,11 @@
+Lab 12 read-only reporting pipeline
+Source: lab_results/results.jsonl
+Experiment: lab12_waiting
+Records analyzed: 320
+Bootstrap resamples: 5000
+Confidence intervals: 95% percentile bootstrap intervals
+Bootstrap sampling unit: recorded seed-level run within each family and policy
+Pair differences compare unordered member pairs; introduction day is ignored
+Expected MSMI, per-call runtime, and reliability curves are not calculated unless those data are available in the source
+Only families and policies present in the selected experiment are analyzed
+The source JSONL file is read only
