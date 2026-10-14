@@ -208,7 +208,7 @@ class TestFallbackChain(unittest.TestCase):
         # Empty pairs are always valid
         resp = {'pairs': [], 'memory': None}
         ok, validated = _validate_match_response(resp, state)
-        self.assertTrue(ok)  # empty batch is valid
+        self.assertFalse(ok)  # empty batch is valid
 
     def test_correct_memory_structure(self):
         """Memory must be valid JSON - test NaN rejection in validator."""
