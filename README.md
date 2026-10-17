@@ -1,147 +1,145 @@
-# Sequential Matching and Information Acquisition for Reciprocal Introductions Under Incomplete Information and Dynamic Constraints
+# Sequential Matching
 
 ### EmptyBrains | IITM
-## The Sequential Matching Problem
 
-This project addresses **The One Introduction Problem**, where a system must decide who should be introduced to whom in a changing population with incomplete information.
+**Romeo & Juliet Hackathon — Sequential Matching Problem, Round 2**
 
-The challenge is not simply to find the best pair. The system must make sequential decisions while considering:
+A deterministic, defensive policy for sequential reciprocal introductions under incomplete information, delayed feedback, and daily clarification constraints.
 
-- Reciprocal preferences
-- Missing information
-- Clarification costs
-- Changing availability
-- Previous introductions and feedback
-- Constraints on concurrent introductions
+The central result is deliberately modest: our submitted policy matches the supplied greedy baseline's outcome exactly on the declared evaluation seeds. Its contribution is a stronger execution contract—validated responses, bounded execution, fallback behavior, per-decision explanations, and reproducible experiments—rather than a claimed improvement in matching quality.
 
-## What We Build
+## The problem
 
-Our system implements a decision policy that can:
+The simulator introduces members over time. Information may be missing or declined, feasible supply can be sparse, and feedback from introductions arrives later. The policy must choose clarification requests and introductions without violating eligibility or protocol constraints.
 
-1. Read the current population and available information.
-2. Identify feasible reciprocal matches.
-3. Decide when additional information is worth requesting.
-4. Select introductions while respecting constraints.
-5. Process feedback from previous introductions.
-6. Update future decisions as the population changes.
+The primary outcome is **Mutual Second-Meeting Intention (MSMI) per 100 arrived members**: realised mutual matches per 100 members who have arrived in the simulation.
 
-The goal is to maximize the number of successful reciprocal introductions over time.
+The environment and member data are synthetic. Results should not be interpreted as evidence about real-world relationships.
 
-## Dataset
+## Submitted policy
 
-The provided dataset contains synthetic people and simulated interaction histories.
+The default `policy.py` mode (`method`) uses the supplied list-order clarification strategy and greedy matching over feasible, previously unproposed pairs. It wraps these decisions in a defensive validation and fallback layer.
 
-It includes:
+1. **Ask:** request missing information in supplied list order within the remaining daily ask budget (12 units at the start of a day).
+2. **Match:** select eligible, never-before-proposed pairs with the supplied greedy matcher.
+3. **Validate:** validate the complete response against the request, including eligibility, availability, pair history, ask budget, JSON shape, and size limits.
+4. **Fallback:** if candidate generation, validation, or timing fails, try the supplied baseline; if that also fails, return a protocol-shaped empty response.
+5. **Explain:** emit one JSON diagnostic record per decision to stderr. Explanations distinguish missing data, heuristic-score uncertainty, and outcomes that have not yet been observed. Diagnostics do not alter the response.
 
-- `members.jsonl` — member information
-- `questionnaires.jsonl` — questionnaire responses
-- `conversations.jsonl` — synthetic conversation records
-- `introductions.jsonl` — previous introductions
-- `feedback.jsonl` — introduction outcomes
-- `state.json` — simulator state
-- `members_flat.csv` — flattened member data
+The policy uses only observable request state and does not read hidden simulator values. It is deterministic in method mode and uses no trained assets.
 
-The dataset contains **2,000 synthetic adults** divided into independent pools.
+### Runtime safeguards
 
-## Matching Process
+- Standard-library-only submitted container.
+- Stage deadlines with a total internal decision budget.
+- Request, response, memory, and diagnostic size limits.
+- Strict JSON serialization, including rejection of non-finite numeric values.
+- A safe empty response as the final fallback.
 
-For each decision cycle, the system considers:
+The slowest individual call measured in the report was **0.27 seconds including Python startup**, against the evaluator's 10-second per-call limit. This is a local measurement, not a claim about the organisers' isolated execution environment.
 
-**Available members → Information → Feasible matches → Clarifications → Introductions → Feedback → Updated decisions**
+## Evaluation results
 
-A potential match must satisfy the relevant constraints for both people.
+The declared evaluation uses seeds **1181–1200**, 20 seeds per family, across six scenario families: `cold_start`, `delayed`, `development`, `drift`, `shift`, and `sparse`. Each policy was evaluated on 120 episodes.
 
-The system also has to ensure that a person is not assigned to multiple concurrent introductions and that previously attempted pairs are not repeated.
+### Overall MSMI
 
-## Clarification
+| Policy | Episodes | All episodes valid | MSMI per 100 |
+|---|---:|---|---:|
+| Submitted method | 120 | Yes | **0.375** |
+| B1 — Greedy | 120 | Yes | **0.375** |
+| B2 — No clarification | 120 | Yes | **0.104** |
+| B3 — Random feasible | 120 | Yes | **0.325** |
 
-Additional information can be requested when the available information is insufficient to make a good decision.
+The submitted method and B1 greedy produced identical decisions and outcome rows, episode by episode. Their only differences were in inference time. The matching score is therefore **not an improvement over greedy**; the added value is defensive behavior, validity, explanations, and auditability.
 
-However, clarification has a limited daily budget, so the system must decide whether obtaining additional information is worth its cost.
+See [`results/final_tables.md`](results/final_tables.md) for per-family results and additional metrics, and [`REPORT.md`](REPORT.md) for the experimental design and failure analysis.
 
-## Evaluation
+## Ablations: what we tested and cut
 
-The primary outcome is **Mutual Second-Meeting Intention (MSMI)**.
+We pre-registered an admission rule: a component needed a replicated gain in mutual acceptances in at least one family, no detected loss in any family, and MSMI and coverage as no-loss checks. Comparisons used paired evaluations and 95% bootstrap intervals with 5,000 resamples.
 
-A successful outcome requires:
+| Component | Evidence | Decision |
+|---|---|---|
+| L1 — Maximum-weight (blossom) matching | On replication seeds 1221–1240, delayed-family mutual acceptances fell by 1.00 per 100; 95% bootstrap interval [−1.95, −0.05]. | **Cut** |
+| L2 — Value-based clarification asks | In the sparse-family admission block, MSMI fell by 0.25 per 100; 95% bootstrap interval [−0.45, −0.05]. | **Cut** |
 
-- The introduction is mutually accepted.
-- The meeting occurs within the simulation period.
-- Both participants indicate that they would like a second meeting.
+Both experiments remain behind `USE_BLOSSOM` and `USE_VALUE_ASKS` in `policy.py`, so the decisions can be reproduced. The submitted configuration keeps both disabled and uses list-order asks with greedy matching.
 
-The main metric is:
+## Reproducibility and auditability
 
-**MSMI per 100 arrived members**
+The Round 2 report records the following checks:
 
-The policy is evaluated against multiple simulated scenarios and compared with baseline strategies.
+- **54 tests passed**.
+- The data verification script reported the dataset as verified.
+- Linux (Python 3.12) and Windows (Python 3.11) replication runs produced identical **240 outcome rows**.
+- Docker was built and run locally by the team.
+- The report records the public repository at commit `e1b88622318e20c110a37a34614d299308ca3aa4` for the audit snapshot.
 
-## Baselines
+The locally performed Docker check does not establish that the image was tested in the organisers' isolated environment.
 
-We consider simple baseline strategies such as:
+## Reproduce
 
-- Greedy matching
-- No-clarification matching
-- Random feasible matching
-
-Our policy is intended to improve upon these by combining reciprocal feasibility, information acquisition, and sequential allocation.
-
-## Our Method (Round 2 submission)
-
-`policy.py` with no arguments runs **method** mode:
-
-- **Asks and matching:** the supplied list-order asks and greedy matching over feasible, never-before-proposed pairs.
-- **Validity layer:** every response is validated before it is returned. On any failure or timeout the policy falls back to the supplied baseline, then to an empty list, so an episode cannot become invalid.
-- **Explanations:** one JSON record per decision on stderr, separating missing data, model uncertainty and stochastic outcomes (PS §9).
-
-**Admission rule (pre-registered in Round 1).** A component enters only with a replicated gain on mutual acceptances in at least one family and no detected loss in any family. The test uses 20 fresh seeds per family and paired bootstrap intervals against greedy.
-
-| Component | Admission block 1201–1220 | Replication block 1221–1240 | Decision |
-|---|---|---|---|
-| L1 maximum-weight (blossom) matching | no detected loss | delayed: mutual acceptances −1.00 per 100 [−1.95, −0.05] | **cut** |
-| L2 value-of-information asks | sparse: MSMI −0.25 per 100 [−0.45, −0.05] | – | **cut** |
-
-The full results, failure analysis and limitations are in [REPORT.md](REPORT.md). The per-family tables are in `results/final_tables.md`.
-
-### Reproduce
+Use Python and Docker as available in your environment. From the repository root:
 
 ```bash
 pip install -r requirements.txt
+
+# Policy and fallback tests
 python -m unittest test_method test_fallback
+
+# Declared baseline/method evaluation
 python evaluate.py --policy policy_default.py --seeds 1181,...,1200 --variants all --output results/method.json
-python hackathon_files/round2_admission.py 1201-1220 2           # admission (and 1221-1240 greedy,L1_blossom for replication)
+
+# Admission experiment and summaries
+python hackathon_files/round2_admission.py 1201-1220 2
 python hackathon_files/round2_summary.py 1201-1220
 python hackathon_files/final_tables.py > results/final_tables.md
+
+# Container smoke test
 docker build -t sequential-policy:submission .
 python evaluate.py --image sequential-policy:submission --seeds 101
 ```
 
-`policy_default.py` only calls `policy.main([])`. It exists because `evaluate.py` always passes `--baseline`, while the container runs the default method mode.
+For the replication block, use seeds 1221–1240 as described in `REPORT.md` and the experiment scripts.
 
-## Repository Structure
+`policy_default.py` is a local wrapper that calls `policy.main([])`. The evaluator passes `--baseline` to policy scripts, whereas the submitted container launches `policy.py` in its default method mode.
+
+## Repository structure
 
 ```text
 .
-├── kit.py, evaluate.py      # supplied simulator and evaluator
-├── policy.py                # submission policy (method mode + baselines + fallback + explanations)
-├── REPORT.md                # final technical report
-├── policy_default.py        # local stand-in for the container entrypoint
-├── test_method.py, test_fallback.py
-├── hackathon_files/         # experiments: admission, summaries, tables
-├── lab_results/             # raw experiment rows (results.jsonl)
-├── results/                 # B1–B3 baselines, method.json, final_tables.md
-├── data/, docs/, examples/
-├── Dockerfile, requirements.txt
-└── README.md
+├── kit.py, evaluate.py       # supplied simulator and evaluator
+├── policy.py                 # policy, validation, fallbacks, explanations
+├── policy_default.py         # local evaluator wrapper
+├── test_method.py            # method tests
+├── test_fallback.py          # fallback and runtime regression tests
+├── REPORT.md                 # full Round 2 technical report
+├── hackathon_files/          # admission experiments and report tables
+├── lab_results/              # raw experiment rows
+├── results/                  # evaluation outputs and final tables
+├── data/, docs/, examples/   # supporting project materials
+├── Dockerfile
+└── requirements.txt
 ```
 
-## Goal
+## Limitations
 
-The objective is to develop a reproducible sequential decision system that balances:
+- Realised outcomes are strongly affected by pair compatibility and stochasticity. Twenty seeds per family cannot reliably detect effects of only a few percent.
+- Reporting point estimates and bootstrap intervals does not mean every smaller loss would be detected.
+- The supplied simulator and its members are synthetic; these results do not validate real-world relationship prediction.
+- The submitted policy follows the greedy baseline's choices and does not learn from delayed outcomes.
+- The Docker image was tested locally by the team, not in the organisers' isolated environment.
 
-**Matching quality + Information value + Availability + Constraints**
+## Team
 
-rather than optimizing pair compatibility in isolation.
+**EmptyBrains | IITM**
 
-## Disclaimer
+- **Vishnu P (LuisMckellen):** method, admission experiments, and report.
+- **Subhadeep Das (emtypyie):** defensive policy adapter and fallback tests.
+- **Taniya Jhabcah:** reporting pipeline.
+- **Ameya (aetherx0):** baselines B1–B3.
 
-The simulator and dataset use synthetic people and synthetic interaction data. Results from the simulator should not be interpreted as evidence about real-world relationship prediction.
+## Provenance and licences
+
+The simulator, evaluator, and data originate from the organisers' starter kit and are subject to the repository's `LICENSE` and `DATA_LICENSE.md`. The rejected maximum-weight matching experiment used NetworkX 3.6.1 (BSD-3-Clause); NetworkX is not part of the submitted container. No external pretrained models or datasets were used.
